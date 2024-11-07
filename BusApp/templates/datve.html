@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Trang Dat Ve</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/datve.css') }}"/>
+</head>
+<script src="{{ url_for('static', filename='js/datve.js') }}"></script>
+<body class="bg">
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">My Bus</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Trang chủ</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/lichtrinh">Lịch trình</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/ttlienhe">Liên hệ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/lshoadon">Hóa đơn</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+<div class="container my-4 ">
+    <div class="row">
+        <div class="col-md-3">
+            <div><label>Điểm đi</label></div>
+            <div>
+                <select name="diem_di" class="form-select">
+                    <option value="" disabled selected>Chọn điểm đến</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div><label>Điểm đến</label></div>
+            <div>
+                <select name="diem_den" class="form-select">
+                    <option value="" disabled selected>Chọn điểm đến</option>
+
+                </select>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div><label>Ngày đi</label></div>
+            <div><input type="date" class="form-control"></div>
+        </div>
+        <div class="col-md-3">
+            <div><label>Ngày về</label></div>
+            <div><input type="date" class="form-control"></div>
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+            <button class="btn btn-danger w-100 btn1" onclick="showResult()">Tìm chuyến xe</button>
+        </div>
+    </div>
+</div>
+<div class="container my-4">
+    <div class="row">
+        <div class="col-md-3">
+            <div><label>Chọn quận huyện đi:</label></div>
+            <div>
+                <select name="quan_huyen_di" class="form-select">
+                    <option value="" disabled selected>Chọn điểm đến</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div><label>Chọn bến đi:</label></div>
+            <div>
+                <select name="ben_di" class="form-select">
+                    <option value="" disabled selected>Chọn điểm đến</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div><label>Chọn quận huyện đến:</label></div>
+            <div>
+                <select name="quan_huyen_den" class="form-select">
+                    <option value="" disabled selected>Chọn điểm đến</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div><label>Chọn bến đến:</label></div>
+            <div>
+                <select name="ben_den" class="form-select">
+                    <option value="" disabled selected>Chọn điểm đến</option>
+                </select>
+            </div>
+        </div>
+        <button class="btn btn-secondary mt-3 btn1" onclick="showFilterResult()">Lọc chuyến xe</button>
+    </div>
+</div>
+<div class="bresult container my-4">
+    <h5>Kết quả:</h5>
+    <div class="d-flex flex-wrap justify-content-center" id="resultContainer">
+        <div class="card mb-3" style="width: 30%;">
+            <div class="card-body">
+                <div class="container-sm">
+                    <table class="table table-bordered table-striped table-sm">
+                        <tbody>
+                        <tr>
+                            <td><strong>Giá vé</strong></td>
+                            <td><span>150k</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Loại</strong></td>
+                            <td><span>Giường nằm</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Số chỗ</strong></td>
+                            <td><span>30</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Bến đi</strong></td>
+                            <td><span>BX Ô Môn</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Bến đến</strong></td>
+                            <td><span>BX Miền Tây</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ngày đi</strong></td>
+                            <td><span>2023-12-01</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ngày về</strong></td>
+                            <td><span>2023-12-16</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Điểm đi</strong></td>
+                            <td><span>Cần Thơ</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Điểm đến</strong></td>
+                            <td><span>Sài Gòn</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Biển số</strong></td>
+                            <td><span>65D1-50354</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Giá vé</strong></td>
+                            <td><span>180k</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tổng số vé</strong></td>
+                            <td><span>2</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tổng tiền</strong></td>
+                            <td><span>360k</span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <a href="/thanhtoan" class="btn btn-primary btn-sm">Đặt vé</a>
+                </div>
+            </div>
+        </div>
+        <div class="card mb-3" style="width: 30%;">
+            <div class="card-body">
+                <div class="container-sm">
+                    <table class="table table-bordered table-striped table-sm">
+                        <tbody>
+                        <tr>
+                            <td><strong>Giá vé</strong></td>
+                            <td><span>150k</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Loại</strong></td>
+                            <td><span>Giường nằm</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Số chỗ</strong></td>
+                            <td><span>30</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Bến đi</strong></td>
+                            <td><span>BX Ô Môn</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Bến đến</strong></td>
+                            <td><span>BX Miền Tây</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ngày đi</strong></td>
+                            <td><span>2023-12-01</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ngày về</strong></td>
+                            <td><span>2023-12-16</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Điểm đi</strong></td>
+                            <td><span>Cần Thơ</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Điểm đến</strong></td>
+                            <td><span>Sài Gòn</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Biển số</strong></td>
+                            <td><span>65D1-50354</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Giá vé</strong></td>
+                            <td><span>180k</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tổng số vé</strong></td>
+                            <td><span>2</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tổng tiền</strong></td>
+                            <td><span>360k</span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <a href="/thanhtoan" class="btn btn-primary btn-sm">Đặt vé</a>
+                </div>
+            </div>
+        </div>
+        <div class="card mb-3" style="width: 30%;">
+            <div class="card-body">
+                <div class="container-sm">
+                    <table class="table table-bordered table-striped table-sm">
+                        <tbody>
+                        <tr>
+                            <td><strong>Giá vé</strong></td>
+                            <td><span>150k</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Loại</strong></td>
+                            <td><span>Giường nằm</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Số chỗ</strong></td>
+                            <td><span>30</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Bến đi</strong></td>
+                            <td><span>BX Ô Môn</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Bến đến</strong></td>
+                            <td><span>BX Miền Tây</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ngày đi</strong></td>
+                            <td><span>2023-12-01</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ngày về</strong></td>
+                            <td><span>2023-12-16</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Điểm đi</strong></td>
+                            <td><span>Cần Thơ</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Điểm đến</strong></td>
+                            <td><span>Sài Gòn</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Biển số</strong></td>
+                            <td><span>65D1-50354</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Giá vé</strong></td>
+                            <td><span>180k</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tổng số vé</strong></td>
+                            <td><span>2</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tổng tiền</strong></td>
+                            <td><span>360k</span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <a href="/thanhtoan" class="btn btn-primary btn-sm">Đặt vé</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</html>

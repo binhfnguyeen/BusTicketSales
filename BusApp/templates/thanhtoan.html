@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang thanh toán</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-pzjw8f+ua7Kw1TIq0v8Fq0eD5X+zB0FfO59zFosG3hF8T2F5LLO1gbBBXyQbw6Vp"
+            crossorigin="anonymous"></script>
+    <style>
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        width: 100%;
+        max-width: 500px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .close {
+        cursor: pointer;
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+    }
+    </style>
+</head>
+<body>
+<div class="container my-4">
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-primary text-white">
+                    Thông tin hành khách
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-sm">
+                        <tbody>
+                        <tr>
+                            <td><strong>Họ và tên</strong></td>
+                            <td>Nguyễn Văn A</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Email</strong></td>
+                            <td>nguyenvana@example.com</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Số điện thoại</strong></td>
+                            <td>0901234567</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Điểm đi</strong></td>
+                            <td>Cần Thơ</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Điểm đến</strong></td>
+                            <td>Sài Gòn</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ngày đi</strong></td>
+                            <td>2023-12-01</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ngày về</strong></td>
+                            <td>2023-12-16</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Số lượng ghế</strong></td>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Điểm lên xe</strong></td>
+                            <td>BX miền Tây</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tổng số tiền</strong></td>
+                            <td>360.000đ</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-warning text-white">
+                    Quy định và điều khoản
+                </div>
+                <div class="card-body">
+                    <p><strong>QUY ĐỊNH & ĐIỀU KHOẢN</strong></p>
+                    <ol class="list-group list-group-numbered">
+                        <li class="list-group-item">
+                            (*) Quý khách vui lòng mang email có chứa mã vé đến văn phòng để đổi vé lên xe trước giờ
+                            xuất bến ít nhất 60 phút để chúng tôi trung chuyển.
+                        </li>
+                        <li class="list-group-item">
+                            (*) Thông tin hành khách phải chính xác, nếu không sẽ không thể lên xe hoặc hủy/đổi vé.
+                        </li>
+                        <li class="list-group-item">
+                            (*) Quý khách không được đổi/trả vé vào các ngày Lễ Tết (ngày thường quý khách được quyền
+                            chuyển đổi hoặc hủy vé một lần duy nhất trước giờ xe chạy 24 giờ), phí hủy vé 10%.
+                        </li>
+                        <li class="list-group-item">
+                            (*) Nếu quý khách có nhu cầu trung chuyển, vui lòng liên hệ số điện thoại 1900 2082 trước
+                            khi đặt vé. Chúng tôi không đón/trung chuyển tại những điểm xe trung chuyển không thể tới
+                            được.
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12 text-center">
+        <a href="/datve" class="btn btn-secondary btn-lg me-3">Quay lại</a>
+        <a href="#" id="btnThanhToan" class="btn btn-primary btn-lg">Thanh toán</a>
+    </div>
+</div>
+</div>
+
+<!-- Modal Thanh Toán -->
+<div id="myModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Thanh Toán</h4>
+            <span id="closeBtn" class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="paymentForm">
+                <div class="form-group">
+                    <label for="accountNumber">Số tài khoản</label>
+                    <input type="text" class="form-control" id="accountNumber" placeholder="Nhập số tài khoản">
+                </div>
+                <div class="form-group">
+                    <label for="accountName">Tên tài khoản</label>
+                    <input type="text" class="form-control" id="accountName" placeholder="Nhập tên tài khoản">
+                </div>
+                <div class="form-group">
+                    <label for="paymentAmount">Số tiền cần thanh toán</label>
+                    <input type="number" class="form-control" id="paymentAmount" placeholder="Nhập số tiền">
+                </div>
+                <button type="submit" class="btn btn-success">Thanh toán</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Thông báo -->
+<div id="noti" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Thông báo</h4>
+            <span id="dongBtn" class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <div id="notiMessage"></div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+    const modal = document.getElementById('myModal');
+    const btnThanhToan = document.getElementById('btnThanhToan');
+    const closeBtn = document.getElementById('closeBtn');
+    const noti = document.getElementById('noti');
+    const notiMessage = document.getElementById('notiMessage');
+    const dongBtn = document.getElementById('dongBtn');
+
+btnThanhToan.onclick = function() {
+    modal.style.display = "block";
+}
+
+closeBtn.onclick = function() {
+    modal.style.display = "none";
+}
+
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    } else if (event.target == noti) {
+        noti.style.display = "none";
+    }
+}
+
+document.getElementById('paymentForm').onsubmit = function(event) {
+    event.preventDefault(); // Ngăn chặn việc gửi form
+
+    const accountNumber = document.getElementById('accountNumber').value.trim();
+    const accountName = document.getElementById('accountName').value.trim();
+    const paymentAmount = document.getElementById('paymentAmount').value.trim();
+
+    if (accountNumber && accountName && paymentAmount) {
+        modal.style.display = "none"; // Ẩn modal Thanh Toán
+        notiMessage.textContent = "Thanh toán thành công!"; // Thông báo thành công
+    } else {
+        notiMessage.textContent = "Thanh toán thất bại! Vui lòng điền đầy đủ thông tin."; // Thông báo thất bại
+    }
+
+    noti.style.display = "block"; // Hiển thị modal Thông báo
+};
+
+
+dongBtn.onclick = function() {
+   noti.style.display = "none";
+};
+
+</script>
+</body>
+</html>

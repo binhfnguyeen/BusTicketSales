@@ -1,0 +1,108 @@
+*{
+    font-family: Calibri, sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background: linear-gradient(to right, #ADD8E6, #4c848e, #77e9f4);
+}
+
+.login-container {
+    display: flex;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: rgba(210, 210, 210, 0.6); /* Nền trắng với độ trong suốt */
+    box-shadow: 0 4px 8px rgba(1, 1, 1, 0.2); /* Thêm bóng để nổi bật hơn */
+    max-width: 700px;
+    width: 100%;
+}
+
+.login-form {
+    display: flex; /* Sử dụng Flexbox để căn giữa nội dung */
+    flex-direction: column; /* Sắp xếp các phần tử theo cột */
+    align-items: center; /* Căn giữa theo chiều ngang */
+    justify-content: center; /* Căn giữa theo chiều dọc */
+    width: 50%; /* Chiếm 50% chiều rộng */
+    padding: 20px; /* Khoảng cách bên trong */
+    box-sizing: border-box; /* Để padding không làm tăng chiều rộng */
+}
+.login-form label {
+    align-self: flex-start; /* Căn trái các nhãn */
+    margin-top: 10px; /* Khoảng cách trên mỗi nhãn */
+    width: 100%; /* Đảm bảo nhãn chiếm chiều rộng đầy đủ */
+    padding: 10px 0 0 5px;
+}
+
+.login-image {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-image img {
+    max-width: 90%;
+    border-radius: 8px;
+}
+
+h2 {
+    color: #3b3b3b;
+    justify-content: center;
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+input[type="email"],
+input[type="password"] {
+    width: 300px;
+    padding: 12px;
+    margin-top: 6px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+
+button {
+    margin-top: 20px; /* Khoảng cách trên nút */
+    width: 100px; /* Chiều rộng của nút */
+    padding: 10px; /* Khoảng cách bên trong nút */
+    background-color: #31cbaf; /* Màu nền của nút */
+    color: white; /* Màu chữ của nút */
+    border: none; /* Không viền */
+    border-radius: 4px; /* Bo góc */
+    cursor: pointer; /* Con trỏ khi di chuột */
+    transition: background-color 0.3s, opacity 0.3s; /* Hiệu ứng chuyển tiếp */
+}
+
+.btn-submit{
+    display: flex;
+    justify-content: center;
+}
+
+button:hover {
+    background-color: #6ff3d8;
+}
+
+.flash {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.flash.success {
+    background-color: #dff0d8;
+    color: #3c763d;
+}
+
+.flash.danger {
+    background-color: #f2dede;
+    color: #a94442;
+}

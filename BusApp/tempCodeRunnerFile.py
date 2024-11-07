@@ -1,0 +1,2 @@
+
+app.register_blueprint(login_blueprint)

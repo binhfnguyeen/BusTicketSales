@@ -1,0 +1,50 @@
+*{
+    font-family: Calibri, sans-serif;
+}
+
+.bg{
+    background-color: rgb(192,192,192);
+}
+.container{
+    padding: 20px;
+}
+
+.row {
+    border: 2px solid white;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: white;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+div.card{
+    border-radius: 10px;
+}
+
+.navbar{
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+.btn1{
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+.card-body{
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+.choose-pos{
+    float: left;
+}
+
+.general-inf{
+    float: left;
+}
+
+.none-float {
+    float: none !important;
+}
+
+.bresult{
+    display: none;
+}
