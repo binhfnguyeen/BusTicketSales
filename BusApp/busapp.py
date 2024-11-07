@@ -1,4 +1,7 @@
-from flask import Flask, url_for, render_template, redirect, request, flash
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+import io
+from flask import Flask, url_for, render_template, redirect, request, flash, make_response
 from main import login_blueprint
 from datve import datve_blueprints
 import sqlite3
@@ -119,32 +122,88 @@ def change_password():
     return render_template('change_password.html')
 
 
-bills = [
-    {
-        "trip_name": "Hanoi - Ho Chi Minh",
-        "departure_time": "2024-11-15 08:00",
-        "booking_time": "2024-11-01 14:30",
-        "total_amount": 500000,
-        "status": "Confirmed",
-        "cancelable": False,
-    },
-    {
-        "trip_name": "Da Nang - Hue",
-        "departure_time": "2024-11-16 10:00",
-        "booking_time": "2024-11-01 15:45",
-        "total_amount": 200000,
-        "status": "Pending",
-        "cancelable": True,
-    }
-]
-@app.route('/lshoadon')
-def bill_history():
-    return render_template("lshoadon.html", bills=bills)
+# bills = [
+#     {
+#         "trip_name": "Hanoi - Ho Chi Minh",
+#         "departure_time": "2024-11-15 08:00",
+#         "booking_time": "2024-11-01 14:30",
+#         "total_amount": 500000,
+#         "status": "Confirmed",
+#         "cancelable": False,
+#     },
+#     {
+#         "trip_name": "Da Nang - Hue",
+#         "departure_time": "2024-11-16 10:00",
+#         "booking_time": "2024-11-01 15:45",
+#         "total_amount": 200000,
+#         "status": "Pending",
+#         "cancelable": True,
+#     }
+# ]
+# @app.route('/lshoadon.css')
+# def bill_history():
+#     return render_template("lshoadon.css.html", bills=bills)
+#
+# @app.route('/cancel/<int:bill_id>')
+# def cancel_bill(bill_id):
+#     # Logic to cancel bill here, updating the status and database as needed
+#     return redirect(url_for('bill_history'))
 
-@app.route('/cancel/<int:bill_id>')
-def cancel_bill(bill_id):
-    # Logic to cancel bill here, updating the status and database as needed
-    return redirect(url_for('bill_history'))
+invoice_data = {
+    "invoices": [
+        {
+            "ticket_id": "P392",
+            "seat": "160",
+            "route": "Vũng Tàu - TP.Hồ Chí Minh",
+            "date": "2024-10-21",
+            "created_date": "2024-10-19",
+            "amount": "160000 VNĐ",
+            "status": "Đã thanh toán"
+        },
+        {
+            "ticket_id": "P772",
+            "seat": "150",
+            "route": "Cần Thơ - Bến Tre",
+            "date": "2024-10-22",
+            "created_date": "2024-10-19",
+            "amount": "150000 VNĐ",
+            "status": "Chờ thanh toán"
+        }
+    ],
+    "total_amount": "310000 VNĐ"
+}
+
+@app.route('/lshoadon')
+def invoice_history():
+    return render_template('lshoadon.html', data=invoice_data)
+
+@app.route('/generate_pdf')
+def generate_pdf():
+    buffer = io.BytesIO()
+    pdf = canvas.Canvas(buffer, pagesize=letter)
+    pdf.drawString(100, 750, "Chi tiết hóa đơn")
+    pdf.drawString(100, 735, "Tên khách hàng: Thế Nguyên")
+    pdf.drawString(100, 720, "Email: phamthenguyen2004@gmail.com")
+    pdf.drawString(100, 705, "SDT: 0932109822")
+    pdf.drawString(100, 690, "Địa chỉ: Q. Tân Phú, TP.HCM")
+    # Add more content if needed
+    pdf.showPage()
+    pdf.save()
+
+    buffer.seek(0)
+    return make_response(buffer.getvalue(), 200, {
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': 'attachment; filename="HoaDon.pdf"'
+    })
+
+@app.route('/delete_invoice/<ticket_id>', methods=['POST'])
+def delete_invoice(ticket_id):
+    # Gọi hàm xóa hóa đơn từ cơ sở dữ liệu theo ticket_id
+    # Ví dụ: db.delete_invoice(ticket_id)
+    # Nếu thành công:
+    return '', 200
+    # Nếu không thành công:
+    # return '', 400
 
 
 if __name__ == '__main__':
