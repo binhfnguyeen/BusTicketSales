@@ -1,9 +1,9 @@
 # Bán vé xe khách
 Xây dựng Website bán vé xe khách
 
-<h1>Nhóm 5</h1>
+<h1>Nhóm 9</h1>
 <ul>
-  <li>Châu Bình Nguyên</li>
+  <li>Châu Bình Nguyên - Trưởng nhóm</li>
   <li>Phạm Thế Nguyên</li>
   <li>Nguyễn Hoàng Việt</li>
   <li>Lê Quang Vinh</li>
