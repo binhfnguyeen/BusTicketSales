@@ -17,7 +17,12 @@ def thanh_toan():
     return render_template("thanhtoan.html")
 @app.route('/')
 def trang_chu():
-    return render_template("home.html")
+    with sqlite3.connect('data/database.db') as conn:
+        c = conn.cursor()
+        c.execute("SELECT * FROM provinces ")
+        provinces = c.fetchall()
+    conn.close()
+    return render_template("home.html", provinces=provinces)
 
 @app.route('/HomeAdmin')
 def home_admin():
@@ -46,6 +51,29 @@ def getVe():
     conn.close()
     return data
 
+def searchLichTrinh(diemDi = None, diemDen = None):
+
+    with sqlite3.connect('data/database.db') as conn:
+        c = conn.cursor()
+        c.execute("SELECT  BenXeDi.ten_ben_xe AS ten_diem_di, BenXeDen.ten_ben_xe AS ten_diem_den, TuyenDuong.khoangCach, LichTrinh.thoiGianDi, Ben_xe.tinh_code FROM LichTrinh, Ben_xe JOIN  TuyenDuong ON LichTrinh.idTuyenDuong = TuyenDuong.idTuyenDuong  JOIN Ben_Xe AS BenXeDi ON TuyenDuong.diemDi = BenXeDi.ben_xe_id  JOIN Ben_Xe AS BenXeDen ON TuyenDuong.diemDen = BenXeDen.ben_xe_id GROUP BY BenXeDi.ten_ben_xe, BenXeDen.ten_ben_xe, TuyenDuong.khoangCach, LichTrinh.thoiGianDi ")
+        data = c.fetchall()
+    if diemDi != None:
+        data = [p for p in data if str(p[4]) == str(diemDi)]
+    if diemDen != None:
+        data = [p for p in data if str(p[4]) == str(diemDen)]
+    conn.close()
+    return data
+@app.route('/search')
+def search():
+    diemdi = request.args.get("departure")
+    diemden = request.args.get("destination")
+    data = searchLichTrinh(diemdi, diemden)
+    with sqlite3.connect('data/database.db') as conn:
+        c = conn.cursor()
+        c.execute("SELECT * FROM provinces ")
+        provinces = c.fetchall()
+    conn.close()
+    return render_template('home.html', data = data, provinces=provinces)
 
 @app.route('/ttlienhe')
 def tt_lien_he():
