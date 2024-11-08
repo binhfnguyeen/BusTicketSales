@@ -1,20 +1,16 @@
+import os
 import sqlite3
 from flask import Blueprint, Flask, render_template, request
 from flask import jsonify
 
 app = Flask(__name__)
-datve_blueprints = Blueprint("datve",__name__)
+datve_blueprints = Blueprint("datve", __name__)
 def get_data_from_db(query):
-    try:
-        connection = sqlite3.connect("data/database.db")
-        cursor = connection.cursor()
-        cursor.execute(query)
-        data = cursor.fetchall()
-    except sqlite3.Error as e:
-        print(f"Database error: {e}")
-        data = []
-    finally:
-        connection.close()
+    conn = sqlite3.connect(os.path.join(os.path.dirname(__file__), 'data/database.db'))
+    cursor = conn.cursor()
+    cursor.execute(query)
+    data = cursor.fetchall()
+    conn.close()
     return data
 
 @datve_blueprints.route("/api/bienso")
@@ -27,15 +23,10 @@ def get_bienso():
 
 @datve_blueprints.route("/api/vitri")
 def get_location():
-    # Lấy các điểm đi và điểm đến từ bảng `provinces`
     diem_di = get_data_from_db("SELECT DISTINCT name FROM provinces")
     diem_den = get_data_from_db("SELECT DISTINCT name FROM provinces")
-
-    # Lấy các quận huyện đi và quận huyện đến từ bảng `districts`
     quan_huyen_di = get_data_from_db("SELECT DISTINCT name FROM districts")
     quan_huyen_den = get_data_from_db("SELECT DISTINCT name FROM districts")
-
-    # Lấy các bến xe đi và bến xe đến từ bảng `Ben_Xe`
     ben_di = get_data_from_db("SELECT DISTINCT ten_ben_xe FROM Ben_Xe")
     ben_den = get_data_from_db("SELECT DISTINCT ten_ben_xe FROM Ben_Xe")
 
@@ -83,4 +74,5 @@ def get_results():
     return jsonify(data)
 
 if __name__ == "main":
+    get_location()
     app.run(debug=True)

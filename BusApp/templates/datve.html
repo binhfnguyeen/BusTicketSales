@@ -39,7 +39,7 @@
         <div class="col-md-3">
             <div><label>Điểm đi</label></div>
             <div>
-                <select name="diem_di" class="form-select">
+                <select name="diem_di" class="form-select" onchange="getDiemDi(this.value)">
                     <option value="" disabled selected>Chọn điểm đến</option>
                 </select>
             </div>
@@ -47,7 +47,7 @@
         <div class="col-md-3">
             <div><label>Điểm đến</label></div>
             <div>
-                <select name="diem_den" class="form-select">
+                <select name="diem_den" class="form-select" onchange="getDiemDen(this.value)">
                     <option value="" disabled selected>Chọn điểm đến</option>
 
                 </select>
@@ -55,11 +55,11 @@
         </div>
         <div class="col-md-3">
             <div><label>Ngày đi</label></div>
-            <div><input type="date" class="form-control"></div>
+            <div><input id="ngaydi" type="date" class="form-control"></div>
         </div>
         <div class="col-md-3">
             <div><label>Ngày về</label></div>
-            <div><input type="date" class="form-control"></div>
+            <div><input id="ngayve" type="date" class="form-control"></div>
         </div>
         <div class="col-md-2 d-flex align-items-end">
             <button class="btn btn-danger w-100 btn1" onclick="showResult()">Tìm chuyến xe</button>
@@ -71,7 +71,7 @@
         <div class="col-md-3">
             <div><label>Chọn quận huyện đi:</label></div>
             <div>
-                <select name="quan_huyen_di" class="form-select">
+                <select name="quan_huyen_di" class="form-select" onchange="getQuanHuyenDi(this.value)">
                     <option value="" disabled selected>Chọn điểm đến</option>
                 </select>
             </div>
@@ -79,7 +79,7 @@
         <div class="col-md-3">
             <div><label>Chọn bến đi:</label></div>
             <div>
-                <select name="ben_di" class="form-select">
+                <select name="ben_di" class="form-select" onchange="getBenDi(this.value)">
                     <option value="" disabled selected>Chọn điểm đến</option>
                 </select>
             </div>
@@ -87,7 +87,7 @@
         <div class="col-md-3">
             <div><label>Chọn quận huyện đến:</label></div>
             <div>
-                <select name="quan_huyen_den" class="form-select">
+                <select name="quan_huyen_den" class="form-select" onchange="getQuanHuyenDen(this.value)">
                     <option value="" disabled selected>Chọn điểm đến</option>
                 </select>
             </div>
@@ -95,7 +95,7 @@
         <div class="col-md-3">
             <div><label>Chọn bến đến:</label></div>
             <div>
-                <select name="ben_den" class="form-select">
+                <select name="ben_den" class="form-select" onchange="getBenDen(this.value)">
                     <option value="" disabled selected>Chọn điểm đến</option>
                 </select>
             </div>
@@ -169,132 +169,7 @@
                 </div>
             </div>
         </div>
-        <div class="card mb-3" style="width: 30%;">
-            <div class="card-body">
-                <div class="container-sm">
-                    <table class="table table-bordered table-striped table-sm">
-                        <tbody>
-                        <tr>
-                            <td><strong>Giá vé</strong></td>
-                            <td><span>150k</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Loại</strong></td>
-                            <td><span>Giường nằm</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Số chỗ</strong></td>
-                            <td><span>30</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Bến đi</strong></td>
-                            <td><span>BX Ô Môn</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Bến đến</strong></td>
-                            <td><span>BX Miền Tây</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Ngày đi</strong></td>
-                            <td><span>2023-12-01</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Ngày về</strong></td>
-                            <td><span>2023-12-16</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Điểm đi</strong></td>
-                            <td><span>Cần Thơ</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Điểm đến</strong></td>
-                            <td><span>Sài Gòn</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Biển số</strong></td>
-                            <td><span>65D1-50354</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Giá vé</strong></td>
-                            <td><span>180k</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Tổng số vé</strong></td>
-                            <td><span>2</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Tổng tiền</strong></td>
-                            <td><span>360k</span></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <a href="/thanhtoan" class="btn btn-primary btn-sm">Đặt vé</a>
-                </div>
-            </div>
-        </div>
-        <div class="card mb-3" style="width: 30%;">
-            <div class="card-body">
-                <div class="container-sm">
-                    <table class="table table-bordered table-striped table-sm">
-                        <tbody>
-                        <tr>
-                            <td><strong>Giá vé</strong></td>
-                            <td><span>150k</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Loại</strong></td>
-                            <td><span>Giường nằm</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Số chỗ</strong></td>
-                            <td><span>30</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Bến đi</strong></td>
-                            <td><span>BX Ô Môn</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Bến đến</strong></td>
-                            <td><span>BX Miền Tây</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Ngày đi</strong></td>
-                            <td><span>2023-12-01</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Ngày về</strong></td>
-                            <td><span>2023-12-16</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Điểm đi</strong></td>
-                            <td><span>Cần Thơ</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Điểm đến</strong></td>
-                            <td><span>Sài Gòn</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Biển số</strong></td>
-                            <td><span>65D1-50354</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Giá vé</strong></td>
-                            <td><span>180k</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Tổng số vé</strong></td>
-                            <td><span>2</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Tổng tiền</strong></td>
-                            <td><span>360k</span></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <a href="/thanhtoan" class="btn btn-primary btn-sm">Đặt vé</a>
-                </div>
-            </div>
-        </div>
+
     </div>
 
 </div>
