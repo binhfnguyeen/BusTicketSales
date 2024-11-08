@@ -26,56 +26,125 @@ window.onload = function() {
             data.ben_den.forEach(ben=>{
                 benDenSelect.innerHTML+= `<option value="${ben}">${ben}</option>`
             })
-
-            diemDiSelect.addEventListener('change', function() {
-                console.log("Điểm đi: " + diemDiSelect.value);
-            });
-            diemDenSelect.addEventListener('change', function() {
-                console.log("Điểm đến: " + diemDenSelect.value);
-            });
-            quanHuyenDiSelect.addEventListener('change', function() {
-                console.log("Quận huyện đi: " + quanHuyenDiSelect.value);
-            });
-            quanHuyenDenSelect.addEventListener('change', function() {
-                console.log("Quận huyện đến: " + quanHuyenDenSelect.value);
-            });
-            benDiSelect.addEventListener('change', function(){
-                console.log("Bến đi: "+benDiSelect.value)
-            })
-            benDenSelect.addEventListener('change', function(){
-                console.log("Bến đến: "+benDenSelect.value)
-            })
         })
         .catch(error => console.error('Error fetching data:', error));
 };
 
-function showResult() {
-    document.querySelector('.bresult').style.display = 'block';
-    const diemDi = document.querySelector('#diem_di').value;
-    const diemDen = document.querySelector('#diem_den').value;
-    const ngayDi = document.getElementById('ngay_di').value;
-    const ngayVe = document.getElementById('ngay_ve').value;
+let diemDi;
+let diemDen;
+let quanHuyenDi;
+let quanHuyenDen;
+let benDi;
+let benDen;
 
-    if (diemDi && diemDen && ngayDi && ngayVe) {
-        const resultHtml = `
+function getDiemDi(value){
+    diemDi = value;
+    console.log(diemDi);
+}
+
+function getDiemDen(value){
+    diemDen = value;
+    console.log(diemDen)
+}
+
+function getQuanHuyenDi(value){
+    quanHuyenDi = value;
+    console.log(quanHuyenDi)
+}
+
+function getQuanHuyenDen(value){
+    quanHuyenDen = value;
+    console.log(quanHuyenDen);
+}
+
+function getBenDi(value){
+    benDi = value;
+    console.log(benDi);
+}
+
+function getBenDen(value){
+    benDen = value;
+    console.log(benDen)
+}
+
+function cssResult(ngayDi, ngayVe) {
+    return `
+        <div class="d-flex flex-wrap justify-content-center" id="resultContainer">
             <div class="card mb-3" style="width: 30%;">
                 <div class="card-body">
                     <div class="container-sm">
                         <table class="table table-bordered table-striped table-sm">
                             <tbody>
-                                <tr><td><strong>Điểm đi</strong></td><td><span>${diemDi}</span></td></tr>
-                                <tr><td><strong>Điểm đến</strong></td><td><span>${diemDen}</span></td></tr>
+                                <tr><td><strong>Giá vé</strong></td><td><span>150k</span></td></tr>
+                                <tr><td><strong>Loại</strong></td><td><span>Giường nằm</span></td></tr>
+                                <tr><td><strong>Số chỗ</strong></td><td><span>30</span></td></tr>
                                 <tr><td><strong>Ngày đi</strong></td><td><span>${ngayDi}</span></td></tr>
                                 <tr><td><strong>Ngày về</strong></td><td><span>${ngayVe}</span></td></tr>
+                                <tr><td><strong>Điểm đi</strong></td><td><span>${diemDi}</span></td></tr>
+                                <tr><td><strong>Điểm đến</strong></td><td><span>${diemDen}</span></td></tr>
+                                <tr><td><strong>Biển số</strong></td><td><span>65D1-50354</span></td></tr>
+                                <tr><td><strong>Giá vé</strong></td><td><span>180k</span></td></tr>
+                                <tr><td><strong>Tổng số vé</strong></td><td><span>2</span></td></tr>
+                                <tr><td><strong>Tổng tiền</strong></td><td><span>360k</span></td></tr>
                             </tbody>
                         </table>
-                        <button class="btn btn-danger mt-3 btn-sm">Đặt vé</button>
+                        <a href="/thanhtoan" class="btn btn-primary btn-sm">Đặt vé</a>
                     </div>
                 </div>
             </div>
-        `;
-        document.getElementById('resultContainer').innerHTML = resultHtml;
+        </div>
+    `;
+}
+
+function showResult() {
+    document.querySelector('.bresult').style.display = 'none';
+    const ngayDi = document.getElementById("ngaydi").value;
+    const ngayVe = document.getElementById("ngayve").value;
+
+    if (diemDi && diemDen && ngayDi && ngayVe) {
+        const resultHtml = cssResult(ngayDi, ngayVe);
+        document.getElementById('resultContainer').outerHTML = resultHtml;
+        document.querySelector('.bresult').style.display = 'block';
     } else {
-        alert("Vui lòng chọn đủ các trường!");
+        alert("Vui lòng chọn đủ thông tin!");
     }
 }
+
+function showFilterResult(){
+    document.querySelector('.bresult').style.display = 'none';
+    const ngayDi = document.getElementById("ngaydi").value;
+    const ngayVe = document.getElementById("ngayve").value;
+
+        if (diemDi && diemDen && ngayDi && ngayVe && quanHuyenDi && quanHuyenDen && benDi && benDen){
+            document.getElementById('resultContainer').outerHTML=`
+                <div class="d-flex flex-wrap justify-content-center" id="resultContainer">
+                    <div class="card mb-3" style="width: 30%;">
+                        <div class="card-body">
+                            <div class="container-sm">
+                                <table class="table table-bordered table-striped table-sm">
+                                    <tbody>
+                                        <tr><td><strong>Giá vé</strong></td><td><span>150k</span></td></tr>
+                                        <tr><td><strong>Loại</strong></td><td><span>Giường nằm</span></td></tr>
+                                        <tr><td><strong>Số chỗ</strong></td><td><span>30</span></td></tr>
+                                        <tr><td><strong>Bến đi</strong></td><td><span>${benDi}</span></td></tr>
+                                        <tr><td><strong>Bến đến</strong></td><td><span>${benDen}</span></td></tr>
+                                        <tr><td><strong>Ngày đi</strong></td><td><span>${ngayDi}</span></td></tr>
+                                        <tr><td><strong>Ngày về</strong></td><td><span>${ngayVe}</span></td></tr>
+                                        <tr><td><strong>Điểm đi</strong></td><td><span>${diemDi}</span></td></tr>
+                                        <tr><td><strong>Điểm đến</strong></td><td><span>${diemDen}</span></td></tr>
+                                        <tr><td><strong>Biển số</strong></td><td><span>65D1-50354</span></td></tr>
+                                        <tr><td><strong>Giá vé</strong></td><td><span>180k</span></td></tr>
+                                        <tr><td><strong>Tổng số vé</strong></td><td><span>2</span></td></tr>
+                                        <tr><td><strong>Tổng tiền</strong></td><td><span>360k</span></td></tr>
+                                    </tbody>
+                                </table>
+                                <a href="/thanhtoan" class="btn btn-primary btn-sm">Đặt vé</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+                document.querySelector('.bresult').style.display = 'block';
+        } else
+            alert("Vui lòng chọn đủ thông tin!");
+}
+
