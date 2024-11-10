@@ -1,14 +1,15 @@
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 import io
-from flask import Flask, url_for, render_template, redirect, request, flash, make_response
+from flask import url_for, render_template, redirect, request, flash, make_response
+from BusApp import app
 from main import login_blueprint
 from datve import datve_blueprints
 import sqlite3
 import os
 import json
+import dao
 
-app=Flask(__name__)
 app.register_blueprint(datve_blueprints)
 app.register_blueprint(login_blueprint)
 
@@ -32,11 +33,15 @@ def home_admin():
 
 @app.route('/UserAdmin/NhanVien')
 def user_admin_NV():
-    return render_template("userAd_NV.html")
+    em = dao.load_employees()
+    total = dao.total_employees()
+    return render_template("userAd_NV.html", employees=em, sum=total)
 
 @app.route('/UserAdmin/KhachHang')
 def user_admin_KH():
-    return render_template("userAd_KH.html")
+    cus = dao.load_customers()
+    total = dao.total_customers()
+    return render_template("userAd_KH.html", customers=cus, sum=total)
 
 @app.route('/loginAd', methods=['GET', 'POST'])
 def login_admin():

@@ -26,7 +26,7 @@
                 </div>
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href="/">
+                        <a class="nav-link d-flex align-items-center" href="/HomeAdmin">
                             <i class="fa-solid fa-house"></i>
                             <p class="mb-0 ms-2 p-2">Trang Chủ</p>
                         </a>
@@ -44,9 +44,6 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="/UserAdmin/KhachHang">Khách Hàng</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Phân quyền</a>
                             </li>
                         </ul>
                     </li>
@@ -69,6 +66,7 @@
                         <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse" data-target="#chuyenXeSubmenu">
                             <i class="fa-solid fa-map"></i>
                             <p class="mb-0 ms-2 p-2">Quản Lý Chuyến Xe</p>
+                            <i class="fa-solid fa-caret-down"></i>
                         </a>
                         <ul class="collapse pl-4" id="chuyenXeSubmenu">
                             <li class="nav-item">
@@ -83,6 +81,7 @@
                         <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse" data-target="#xeSubmenu">
                             <i class="fa-solid fa-bus"></i>
                             <p class="mb-0 ms-2 p-2">Quản Lý Xe</p>
+                            <i class="fa-solid fa-caret-down"></i>
                         </a>
                         <ul class="collapse pl-4" id="xeSubmenu">
                             <li class="nav-item">
@@ -130,67 +129,55 @@
             <table class="table table-bordered">
                 <thead class="thead-light">
                     <tr>
+                        <th>ID</th>
                         <th>Họ Tên</th>
-                        <th>Email</th>
-                        <th>Địa Chỉ</th>
+                        <th>Số Điện Thoại</th>
                         <th>Giới Tính</th>
-                        <th>Tuổi</th>
-                        <th>Số lần đặt vé</th>
+                        <th>Email</th>
+                        <th>Ngày Sinh</th>
+                        <th>Ngân Hàng</th>
+                        <th>Số Tài Khoản</th>
                         <th>Hành Động</th>
                     </tr>
                 </thead>
+
                 <tbody id="customer-table-body">
+                {% for c in customers %}
                     <tr>
-                        <td>Châu Bình Nguyên</td>
-                        <td>nv1@gmail.com</td>
-                        <td>Cần Thơ</td>
-                        <td>Nam</td>
-                        <td>25</td>
-                        <td>0</td>
+                        <td>{{ c.idKhachHang }}</td>
+                        <td>{{ c.hoKhach + ' ' + c.tenKhach }}</td>
+                        <td>{{ c.soDienThoai }}</td>
+                        <td>{{ c.gioiTinh }}</td>
+                        <td>{{ c.email }}</td>
+                        <td>{{ c.ngaySinh }}</td>
+                        <td>{{ c.nganHang }}</td>
+                        <td>{{ c.soTaiKhoan }}</td>
                         <td><button class="btn btn-danger"><i class="fa fa-trash"></i></button></td>
                     </tr>
-                    <tr>
-                        <td>Trần Quang Trường</td>
-                        <td>nv4@gmail.com</td>
-                        <td>An Giang</td>
-                        <td>Nam</td>
-                        <td>24</td>
-                        <td>0</td>
-                        <td><button class="btn btn-danger"><i class="fa fa-trash"></i></button></td>
-                    </tr>
-                    <tr>
-                        <td>Vương Minh Trí</td>
-                        <td>nv3@gmail.com</td>
-                        <td>Hậu Giang</td>
-                        <td>Nam</td>
-                        <td>28</td>
-                        <td>0</td>
-                        <td><button class="btn btn-danger"><i class="fa fa-trash"></i></button></td>
-                    </tr>
-                    <tr>
-                        <td>Phạm Thế Nguyên</td>
-                        <td>nvhc@gmail.com</td>
-                        <td>Cần Thơ</td>
-                        <td>Nữ</td>
-                        <td>23</td>
-                        <td>0</td>
-                        <td><button class="btn btn-danger"><i class="fa fa-trash"></i></button></td>
-                    </tr>
+                {% endfor %}
                 </tbody>
             </table>
 
             <!-- Total Employees -->
             <div class="mb-2">
-                <h5 id="total-customers">Tổng số khách hàng: 0</h5>
+                <h5 id="total-customers">Tổng số khách hàng: {{ sum }}</h5>
             </div>
 
 
             <!-- Pagination -->
             <nav>
                 <ul class="pagination justify-content-center">
-                    <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    <li class="page-item">
+                        {% if customers.has_prev %}
+                            <a class="page-link" href="{{ url_for('user_admin_KH', page=customers.prev_num) }}">Previous</a>
+                        {% endif %}
+                    </li>
+                    <li class="page-item active"><span class="page-link">Trang {{ customers.page }} trên {{ customers.pages }}</span></li>
+                    <li class="page-item">
+                        {% if customers.has_next %}
+                            <a class="page-link" href="{{ url_for('user_admin_KH', page=customers.next_num) }}">Next</a>
+                        {% endif %}
+                    </li>
                 </ul>
             </nav>
 
