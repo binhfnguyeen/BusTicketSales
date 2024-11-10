@@ -2,7 +2,7 @@ from flask import Flask, render_template, request
 import os
 import json
 import hashlib
-from BusApp import main
+import main
 
 
 def read_user():

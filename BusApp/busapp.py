@@ -2,8 +2,8 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 import io
 from flask import Flask, url_for, render_template, redirect, request, flash, make_response
-from BusApp.main import login_blueprint
-from BusApp.datve import datve_blueprints
+from main import login_blueprint
+from datve import datve_blueprints
 import sqlite3
 import os
 import json

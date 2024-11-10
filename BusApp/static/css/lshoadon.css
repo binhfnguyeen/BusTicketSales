@@ -117,3 +117,7 @@ table.table {
     font-weight: bold;
     margin-bottom: 1rem;
 }
+
+.table-responsive {
+    overflow-x: auto;
+}
