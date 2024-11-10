@@ -25,8 +25,6 @@ def trang_chu():
     conn.close()
     return render_template("home.html", provinces=provinces)
 
-
-
 @app.route('/HomeAdmin')
 def home_admin():
     return render_template("homeAd_new.html")
