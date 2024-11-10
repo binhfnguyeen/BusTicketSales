@@ -2,6 +2,10 @@
     font-family: Calibri, sans-serif;
 }
 
+.logo {
+    height: 50px;
+}
+
 .bg{
     background-color: rgb(192,192,192);
 }

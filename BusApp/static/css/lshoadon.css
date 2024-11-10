@@ -3,6 +3,10 @@ body {
     color: darkblue;
 }
 
+.logo {
+    height: 50px;
+}
+
 /* Định dạng cho phần tiêu đề */
 h1 {
     color: #333333;
@@ -112,4 +116,8 @@ table.table {
     color: #dc3545;
     font-weight: bold;
     margin-bottom: 1rem;
+}
+
+.table-responsive {
+    overflow-x: auto;
 }

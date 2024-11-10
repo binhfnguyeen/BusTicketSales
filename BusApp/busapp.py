@@ -1,14 +1,15 @@
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 import io
-from flask import Flask, url_for, render_template, redirect, request, flash, make_response
+from flask import url_for, render_template, redirect, request, flash, make_response
+from BusApp import app
 from main import login_blueprint
 from datve import datve_blueprints
 import sqlite3
 import os
 import json
+import dao
 
-app=Flask(__name__)
 app.register_blueprint(datve_blueprints)
 app.register_blueprint(login_blueprint)
 
@@ -24,13 +25,40 @@ def trang_chu():
     conn.close()
     return render_template("home.html", provinces=provinces)
 
+
+
 @app.route('/HomeAdmin')
 def home_admin():
-    return render_template("homeAd.html")
+    return render_template("homeAd_new.html")
 
-@app.route('/LoginAdmin')
+@app.route('/UserAdmin/NhanVien')
+def user_admin_NV():
+    em = dao.load_employees()
+    total = dao.total_employees()
+    return render_template("userAd_NV.html", employees=em, sum=total)
+
+@app.route('/UserAdmin/KhachHang')
+def user_admin_KH():
+    cus = dao.load_customers()
+    total = dao.total_customers()
+    return render_template("userAd_KH.html", customers=cus, sum=total)
+
+@app.route('/loginAd', methods=['GET', 'POST'])
 def login_admin():
-    return  render_template("loginAd.html")
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        # Kiểm tra xem email và password có được nhập không
+        if not email or not password:
+            flash("Vui lòng nhập email và mật khẩu!", "danger")
+        elif email == "admin@example.com" and password == "password":
+            flash("Đăng nhập thành công!", "success")
+            return redirect(url_for('home_admin'))  # Chuyển hướng đến route 'home_admin'
+        else:
+            flash("Email hoặc mật khẩu không đúng!", "danger")
+
+    return render_template('login_new.html')
 
 @app.route('/ttcanhan')
 def tt_ca_nhan():
