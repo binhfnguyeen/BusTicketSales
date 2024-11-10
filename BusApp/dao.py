@@ -28,6 +28,7 @@ def validate_user(username=None, password=None):
     users = read_user()
     if not users:
         return None  # No users found or error reading users
+
     password_hash = hashlib.md5(password.strip().encode("utf-8")).hexdigest()
     for user in users:
         if user.get('username') == username and user.get('password') == password_hash:
