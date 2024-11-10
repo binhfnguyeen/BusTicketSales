@@ -1,8 +1,10 @@
 from flask import Flask, render_template, request
 import os
 import json
-import main
 import hashlib
+from BusApp import main
+
+
 def read_user():
     with open(os.path.join(main.app.root_path, "./data/user.json"), encoding="utf-8") as f:
         return json.load(f)
