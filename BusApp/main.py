@@ -27,3 +27,8 @@ def login():
 def register():
     err_msg = ""
     return render_template('dangky.html', err_msg=err_msg)
+
+@login_blueprint.route("/logout")
+def logout():
+    session.pop('username', None)
+    return render_template("home.html")
