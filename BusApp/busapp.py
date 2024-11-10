@@ -24,13 +24,36 @@ def trang_chu():
     conn.close()
     return render_template("home.html", provinces=provinces)
 
+
+
 @app.route('/HomeAdmin')
 def home_admin():
-    return render_template("homeAd.html")
+    return render_template("homeAd_new.html")
 
-@app.route('/LoginAdmin')
+@app.route('/UserAdmin/NhanVien')
+def user_admin_NV():
+    return render_template("userAd_NV.html")
+
+@app.route('/UserAdmin/KhachHang')
+def user_admin_KH():
+    return render_template("userAd_KH.html")
+
+@app.route('/loginAd', methods=['GET', 'POST'])
 def login_admin():
-    return  render_template("loginAd.html")
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        # Kiểm tra xem email và password có được nhập không
+        if not email or not password:
+            flash("Vui lòng nhập email và mật khẩu!", "danger")
+        elif email == "admin@example.com" and password == "password":
+            flash("Đăng nhập thành công!", "success")
+            return redirect(url_for('home_admin'))  # Chuyển hướng đến route 'home_admin'
+        else:
+            flash("Email hoặc mật khẩu không đúng!", "danger")
+
+    return render_template('login_new.html')
 
 @app.route('/ttcanhan')
 def tt_ca_nhan():
