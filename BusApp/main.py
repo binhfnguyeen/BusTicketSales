@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask import Blueprint
-import dao
+from BusApp import dao
 
 login_blueprint = Blueprint("login", __name__)
 app = Flask(__name__)
