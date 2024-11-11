@@ -1,6 +1,6 @@
-from sqlalchemy import Column, Integer, String, Date, ForeignKey
+from sqlalchemy import Column, Integer, String, Date, ForeignKey, REAL
 from sqlalchemy.orm import relationship
-from BusApp import db, app
+from BusTicketSales.BusApp import db, app
 from datetime import datetime
 
 class KhachHang(db.Model):
@@ -26,6 +26,20 @@ class NhanVien(db.Model):
     ngaySinh = Column(Date, nullable=False)
     nganHang = Column(String(100), nullable=True)
     soTaiKhoan = Column(String(20), nullable=True)
+
+class TuyenXe(db.Model):
+     __tablename__ = 'TuyenDuong'
+     idTuyenDuong = Column(Integer, primary_key=True, autoincrement=True)
+     diemDi = Column(String(50), nullable=False)
+     diemDen = Column(String(20), nullable=False)
+     khoangCach = Column(REAL, nullable=False)
+
+class Xe(db.Model):
+    __tablename__ = 'Xe'
+    idXe = Column(Integer, primary_key=True, autoincrement=True)
+    bienSo = Column(String(50), nullable=False)
+    sucChua = Column(Integer, nullable=False)
+    tinhTrangXe = Column(String(20), nullable=False)
 
 if __name__ == '__main__':
     with app.app_context():

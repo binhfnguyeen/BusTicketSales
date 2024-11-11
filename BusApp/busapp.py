@@ -2,14 +2,13 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 import io
 from flask import url_for, render_template, redirect, request, flash, make_response, session
-from BusApp import app
 from main import login_blueprint
 from datve import datve_blueprints
 import sqlite3
 import os
 import json
 import dao
-
+from BusTicketSales.BusApp import app
 app.register_blueprint(datve_blueprints)
 app.register_blueprint(login_blueprint)
 
@@ -25,6 +24,18 @@ def trang_chu():
         provinces = c.fetchall()
     conn.close()
     return render_template("home.html", provinces=provinces)
+
+@app.route('/TuyenXe')
+def tuyenXe_admin():
+    tx = dao.load_tuyenXe()
+    total = dao.total_tuyenXe()
+    return render_template("tuyenXe.html", tuyenXe=tx, sum=total)
+
+@app.route('/Xe')
+def xe_admin():
+    x = dao.load_Xe()
+    total = dao.total_Xe()
+    return render_template("xe.html", Xe=x, sum=total)
 
 @app.route('/HomeAdmin')
 def home_admin():

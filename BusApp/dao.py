@@ -2,9 +2,9 @@ from flask import Flask, render_template, request
 import os
 import json
 import hashlib
-from BusApp import main
-from BusApp.models import KhachHang, NhanVien
-import BusApp
+from BusTicketSales.BusApp import main
+from BusTicketSales.BusApp.models import KhachHang, NhanVien, TuyenXe, Xe
+from BusTicketSales import BusApp
 
 
 def read_user():
@@ -48,3 +48,17 @@ def load_employees():
 
 def total_employees():
     return NhanVien.query.count()
+
+def load_tuyenXe():
+    page = request.args.get('page', 1, type=int)
+    return TuyenXe.query.paginate(page=page, per_page=6)
+
+def total_tuyenXe():
+    return TuyenXe.query.count()
+
+def load_Xe():
+    page = request.args.get('page', 1, type=int)
+    return Xe.query.paginate(page=page, per_page=6)
+
+def total_Xe():
+    return Xe.query.count()
