@@ -1,7 +1,7 @@
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 import io
-from flask import url_for, render_template, redirect, request, flash, make_response
+from flask import url_for, render_template, redirect, request, flash, make_response, session
 from BusApp import app
 from main import login_blueprint
 from datve import datve_blueprints
@@ -12,6 +12,7 @@ import dao
 
 app.register_blueprint(datve_blueprints)
 app.register_blueprint(login_blueprint)
+
 
 @app.route('/thanhtoan')
 def thanh_toan():
@@ -24,8 +25,6 @@ def trang_chu():
         provinces = c.fetchall()
     conn.close()
     return render_template("home.html", provinces=provinces)
-
-
 
 @app.route('/HomeAdmin')
 def home_admin():
