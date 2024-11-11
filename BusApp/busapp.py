@@ -1,14 +1,14 @@
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 import io
-from flask import url_for, render_template, redirect, request, flash, make_response, session
+from flask import url_for, render_template, redirect, request, flash, make_response, session, jsonify
 from main import login_blueprint
 from datve import datve_blueprints
 import sqlite3
 import os
 import json
 import dao
-from BusTicketSales.BusApp import app
+from BusApp import app
 app.register_blueprint(datve_blueprints)
 app.register_blueprint(login_blueprint)
 
@@ -52,6 +52,81 @@ def user_admin_KH():
     cus = dao.load_customers()
     total = dao.total_customers()
     return render_template("userAd_KH.html", customers=cus, sum=total)
+
+@app.route('/ThemKhachHang', methods=['GET', 'POST'])
+def add_customer():
+    if request.method == 'POST':
+        # Xử lý dữ liệu từ form
+        hoKhach = request.form['hoKhach']
+        tenKhach = request.form['tenKhach']
+        soDienThoai = request.form['soDienThoai']
+        gioiTinh = request.form['gioiTinh']
+        email = request.form['email']
+        ngaySinh = request.form['ngaySinh']
+        nganHang = request.form['nganHang']
+        soTaiKhoan = request.form['soTaiKhoan']
+
+        # Kết nối và thêm dữ liệu vào database
+        connection = sqlite3.connect('D:/BusTicketSales/BusApp/data/database.db')
+        cursor = connection.cursor()
+        cursor.execute("""
+            INSERT INTO KhachHang (hoKhach, tenKhach, soDienThoai, gioiTinh, email, ngaySinh, nganHang, soTaiKhoan) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """, (hoKhach, tenKhach, soDienThoai, gioiTinh, email, ngaySinh, nganHang, soTaiKhoan))
+        connection.commit()
+        connection.close()
+
+        # Chuyển hướng về trang chính sau khi thêm thành công
+        return redirect('/HomeAdmin')
+
+    # Nếu là GET, hiển thị trang thêm khách hàng
+    return render_template('them_KH.html')
+
+@app.route('/xoa_KH/<int:customer_id>', methods=['DELETE'])
+def delete_customer(customer_id):
+    try:
+        # Giả sử bạn có một hàm để kết nối và xóa dữ liệu từ database
+        dao.delete_customer_from_db(customer_id)  # X óa khách hàng theo ID
+        return jsonify({"success": True}), 200
+    except Exception as e:
+        print(e)
+        return jsonify({"success": False}), 500
+
+def get_db_connection():
+    conn = sqlite3.connect('D:/BusTicketSales/BusApp/data/database.db')
+    conn.row_factory = sqlite3.Row
+    return conn
+
+# Route để hiển thị trang chỉnh sửa
+@app.route('/chinhSua_KH/<int:id>')
+def edit_customer(id):
+    conn = get_db_connection()
+    customer = conn.execute('SELECT * FROM KhachHang WHERE idKhachHang = ?', (id,)).fetchone()
+    conn.close()
+    if customer:
+        return render_template('capNhat_KH.html', customer=customer)
+    return "Customer not found", 404
+
+# Route để cập nhật thông tin khách hàng
+@app.route('/capNhat_KH/<int:id>', methods=['POST'])
+def update_customer(id):
+    hoKhach = request.form['hoKhach']
+    tenKhach = request.form['tenKhach']
+    soDienThoai = request.form['soDienThoai']
+    gioiTinh = request.form['gioiTinh']
+    email = request.form['email']
+    ngaySinh = request.form['ngaySinh']
+    nganHang = request.form['nganHang']
+    soTaiKhoan = request.form['soTaiKhoan']
+
+    conn = get_db_connection()
+    conn.execute('''UPDATE KhachHang SET hoKhach = ?, tenKhach = ?, soDienThoai = ?, gioiTinh = ?, 
+                    email = ?, ngaySinh = ?, nganHang = ?, soTaiKhoan = ? WHERE idKhachHang = ?''',
+                 (hoKhach, tenKhach, soDienThoai, gioiTinh, email, ngaySinh, nganHang, soTaiKhoan, id))
+    conn.commit()
+    conn.close()
+    return redirect(url_for('home_admin'))  # Chuyển hướng về trang chủ sau khi cập nhật thành công
+
 
 @app.route('/loginAd', methods=['GET', 'POST'])
 def login_admin():
