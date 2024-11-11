@@ -39,7 +39,7 @@
         <a href="">Đăng xuất ({{ session['username'] }})</a>
         {% else %}
         <!-- Nếu chưa đăng nhập, hiển thị "Đăng Nhập / Đăng Ký" -->
-        <a href="{{ url_for('login') }}">Đăng Nhập / Đăng Ký</a>
+        <a href="/login">Đăng Nhập / Đăng Ký</a>
         {% endif %}
     </div>
 </header>
