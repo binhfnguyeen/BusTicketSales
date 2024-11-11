@@ -3,9 +3,9 @@ import os
 import json
 import hashlib
 from BusApp import main
-from BusApp.models import KhachHang, NhanVien
+from BusApp.models import KhachHang, NhanVien, TuyenXe, Xe
 import BusApp
-
+import sqlite3
 
 def read_user():
     try:
@@ -48,3 +48,24 @@ def load_employees():
 
 def total_employees():
     return NhanVien.query.count()
+
+def load_tuyenXe():
+    page = request.args.get('page', 1, type=int)
+    return TuyenXe.query.paginate(page=page, per_page=6)
+
+def total_tuyenXe():
+    return TuyenXe.query.count()
+
+def load_Xe():
+    page = request.args.get('page', 1, type=int)
+    return Xe.query.paginate(page=page, per_page=6)
+
+def total_Xe():
+    return Xe.query.count()
+
+def delete_customer_from_db(customer_id):
+    connection = sqlite3.connect('D:/BusTicketSales/BusApp/data/database.db')
+    cursor = connection.cursor()
+    cursor.execute("DELETE FROM KhachHang WHERE idKhachHang = ?", (customer_id,))
+    connection.commit()
+    connection.close()

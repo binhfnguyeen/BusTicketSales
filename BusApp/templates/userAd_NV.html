@@ -55,7 +55,7 @@
                         </a>
                         <ul class="collapse pl-4" id="tuyenXeSubmenu">
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Danh Sách Tuyến Xe</a>
+                                <a class="nav-link" href="/TuyenXe">Danh Sách Tuyến Xe</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#">Thêm Tuyến Xe</a>
@@ -85,7 +85,7 @@
                         </a>
                         <ul class="collapse pl-4" id="xeSubmenu">
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Danh Sách Xe</a>
+                                <a class="nav-link" href="/Xe">Danh Sách Xe</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#">Thêm Xe</a>
@@ -169,13 +169,13 @@
                 <ul class="pagination justify-content-center">
                     <li class="page-item">
                         {% if employees.has_prev %}
-                            <a class="page-link" href="{{ url_for('user_admin_KH', page=customers.prev_num) }}">Previous</a>
+                            <a class="page-link" href="{{ url_for('user_admin_NV', page=customers.prev_num) }}">Previous</a>
                         {% endif %}
                     </li>
                     <li class="page-item active"><span class="page-link">Trang {{ employees.page }} trên {{ employees.pages }}</span></li>
                     <li class="page-item">
                         {% if employees.has_next %}
-                            <a class="page-link" href="{{ url_for('user_admin_KH', page=customers.next_num) }}">Next</a>
+                            <a class="page-link" href="{{ url_for('user_admin_NV', page=customers.next_num) }}">Next</a>
                         {% endif %}
                     </li>
                 </ul>

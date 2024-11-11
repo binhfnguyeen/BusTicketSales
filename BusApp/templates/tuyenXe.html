@@ -112,7 +112,7 @@
         <main class="col-md-10 ml-sm-auto px-4">
             <!-- Header -->
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h2>Người Dùng / Khách hàng</h2>
+                <h2>Tuyến Xe / Danh Sách Tuyến Xe</h2>
                 <div class="text-right">
                     <span>Xin chào, Admin</span>
                     <img src="{{ url_for('static', filename='data/avatar.png') }}" alt="Avatar" class="rounded-circle"
@@ -122,7 +122,7 @@
             <!-- Search and Add Button -->
             <div class="d-flex justify-content-between mb-3">
                 <input type="text" class="form-control w-25" placeholder="Search...">
-                <a href="/ThemKhachHang" class="btn btn-primary"><i class="fa fa-plus"></i> Thêm khách hàng</a>
+                <button class="btn btn-primary"><i class="fa fa-plus"></i> Thêm tuyến xe</button>
             </div>
 
             <!-- Employee Table -->
@@ -130,34 +130,21 @@
                 <thead class="thead-light">
                     <tr>
                         <th>ID</th>
-                        <th>Họ Tên</th>
-                        <th>Số Điện Thoại</th>
-                        <th>Giới Tính</th>
-                        <th>Email</th>
-                        <th>Ngày Sinh</th>
-                        <th>Ngân Hàng</th>
-                        <th>Số Tài Khoản</th>
+                        <th>Điểm Đi</th>
+                        <th>Điểm Đến</th>
+                        <th>Khoảng Cách</th>
                         <th>Hành Động</th>
                     </tr>
                 </thead>
 
                 <tbody id="customer-table-body">
-                {% for c in customers %}
+                {% for c in tuyenXe %}
                     <tr>
-                        <td>{{ c.idKhachHang }}</td>
-                        <td>{{ c.hoKhach + ' ' + c.tenKhach }}</td>
-                        <td>{{ c.soDienThoai }}</td>
-                        <td>{{ c.gioiTinh }}</td>
-                        <td>{{ c.email }}</td>
-                        <td>{{ c.ngaySinh }}</td>
-                        <td>{{ c.nganHang }}</td>
-                        <td>{{ c.soTaiKhoan }}</td>
-                        <td>
-                            <button class="btn btn-danger delete-btn" data-id="{{ c.idKhachHang }}"><i class="fa fa-trash"></i></button>
-                            <a href="{{ url_for('edit_customer', id=c.idKhachHang) }}" class="btn btn-primary"><i class="fa fa-edit"></i></a>
-
-
-                        </td>
+                        <td>{{ c.idTuyenDuong }}</td>
+                        <td>{{ c.diemDi }}</td>
+                        <td>{{ c.diemDen }}</td>
+                        <td>{{ c.khoangCach }}</td>
+                        <td><button class="btn btn-danger"><i class="fa fa-trash"></i></button></td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -165,7 +152,7 @@
 
             <!-- Total Employees -->
             <div class="mb-2">
-                <h5 id="total-customers">Tổng số khách hàng: {{ sum }}</h5>
+                <h5 id="total-customers">Tổng số tuyến xe: {{ sum }}</h5>
             </div>
 
 
@@ -173,14 +160,14 @@
             <nav>
                 <ul class="pagination justify-content-center">
                     <li class="page-item">
-                        {% if customers.has_prev %}
-                            <a class="page-link" href="{{ url_for('user_admin_KH', page=customers.prev_num) }}">Previous</a>
+                        {% if tuyenXe.has_prev %}
+                            <a class="page-link" href="{{ url_for('tuyenXe_admin', page=tuyenXe.prev_num) }}">Previous</a>
                         {% endif %}
                     </li>
-                    <li class="page-item active"><span class="page-link">Trang {{ customers.page }} trên {{ customers.pages }}</span></li>
+                    <li class="page-item active"><span class="page-link">Trang {{ tuyenXe.page }} trên {{ tuyenXe.pages }}</span></li>
                     <li class="page-item">
-                        {% if customers.has_next %}
-                            <a class="page-link" href="{{ url_for('user_admin_KH', page=customers.next_num) }}">Next</a>
+                        {% if tuyenXe.has_next %}
+                            <a class="page-link" href="{{ url_for('tuyenXe_admin', page=tuyenXe.next_num) }}">Next</a>
                         {% endif %}
                     </li>
                 </ul>
@@ -195,32 +182,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    const deleteButtons = document.querySelectorAll(".delete-btn");
 
-    deleteButtons.forEach(button => {
-        button.addEventListener("click", function() {
-            const customerId = this.getAttribute("data-id");
-
-            if (confirm("Bạn có chắc chắn muốn xóa khách hàng này?")) {
-                fetch(`/xoa_KH/${customerId}`, {
-                    method: 'DELETE'
-                })
-                .then(response => {
-                    if (response.ok) {
-                        this.closest('tr').remove(); // Xóa hàng khỏi bảng nếu thành công
-                        alert("Đã xóa thành công!");
-                    } else {
-                        alert("Xóa không thành công. Vui lòng thử lại.");
-                    }
-                })
-                .catch(error => console.error("Error:", error));
-            }
-        });
-    });
-});
-</script>
 
 </body>
 </html>
