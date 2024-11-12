@@ -3,22 +3,21 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 import io
 from flask import url_for, render_template, redirect, request, flash, make_response, session, jsonify
-from main import login_blueprint
-from datve import datve_blueprints
+from BusTicketSales.BusApp.main import login_blueprint
+from BusTicketSales.BusApp.datve import datve_blueprints
 import sqlite3
 import os
 import json
 import dao
-<<<<<<< HEAD
+
 from BusTicketSales.BusApp import app
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import random
 
-=======
-from BusApp import app
->>>>>>> 4c6f57a8b35bb95207d21c95d3c87f2bccfe3dba
+
+from BusTicketSales.BusApp import app
 app.register_blueprint(datve_blueprints)
 app.register_blueprint(login_blueprint)
 
@@ -70,8 +69,7 @@ def user_admin_KH():
     total = dao.total_customers()
     return render_template("userAd_KH.html", customers=cus, sum=total)
 
-<<<<<<< HEAD
-=======
+
 @app.route('/ThemKhachHang', methods=['GET', 'POST'])
 def add_customer():
     if request.method == 'POST':
@@ -146,7 +144,6 @@ def update_customer(id):
     conn.close()
     return redirect(url_for('home_admin'))  # Chuyển hướng về trang chủ sau khi cập nhật thành công
 
->>>>>>> 4c6f57a8b35bb95207d21c95d3c87f2bccfe3dba
 
 @app.route('/loginAd', methods=['GET', 'POST'])
 def login_admin():

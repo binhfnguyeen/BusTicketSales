@@ -3,7 +3,6 @@ import sqlite3
 import stripe
 from flask import Blueprint, Flask, render_template, request
 from flask import jsonify
-import requests
 app = Flask(__name__)
 datve_blueprints = Blueprint("datve", __name__)
 

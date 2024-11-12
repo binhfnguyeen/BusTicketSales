@@ -2,14 +2,14 @@ from flask import Flask, render_template, request
 import os
 import json
 import hashlib
-from BusApp import main
-from BusApp.models import KhachHang, NhanVien, TuyenXe, Xe
-import BusApp
+from BusTicketSales.BusApp import main
+from BusTicketSales.BusApp.models import KhachHang, NhanVien, TuyenXe, Xe
+import BusTicketSales.BusApp
 import sqlite3
 
 def read_user():
     try:
-        with open(os.path.join(BusApp.app.root_path, "./data/user.json"), encoding="utf-8") as f:
+        with open(os.path.join(BusTicketSales.BusApp.app.root_path, "./data/user.json"), encoding="utf-8") as f:
             data = json.load(f)
             if isinstance(data, dict) and 'users' in data and isinstance(data['users'], list):
                 return data['users']
