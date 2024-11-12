@@ -121,7 +121,10 @@
             </div>
             <!-- Search and Add Button -->
             <div class="d-flex justify-content-between mb-3">
-                <input type="text" class="form-control w-25" placeholder="Search...">
+                <form class="d-flex" method="get" action="/UserAdmin/KhachHang">
+                    <input type="text" name="kw" class="form-control me-2" placeholder="Search..." value="{{ request.args.get('kw', '') }}">
+                    <button type="submit" class="btn btn-primary">Tìm</button>
+                </form>
                 <a href="/ThemKhachHang" class="btn btn-primary"><i class="fa fa-plus"></i> Thêm khách hàng</a>
             </div>
 

@@ -35,16 +35,28 @@ def validate_user(username=None, password=None):
             return user
     return None  # If no matching user is found
 
-def load_customers():
+def load_customers(kw=None):
     page = request.args.get('page', 1, type=int)
-    return KhachHang.query.paginate(page=page, per_page=6)
+    query = KhachHang.query
+
+    # Nếu `kw` không trống, lọc theo từ khóa trong tên khách hàng
+    if kw:
+        query = query.filter(KhachHang.tenKhach.contains(kw) | KhachHang.hoKhach.contains(kw))
+
+    return query.paginate(page=page, per_page=6)
 
 def total_customers():
     return KhachHang.query.count()
 
-def load_employees():
+def load_employees(kw=None):
     page = request.args.get('page', 1, type=int)
-    return NhanVien.query.paginate(page=page, per_page=6)
+    query = NhanVien.query
+
+    # Nếu `kw` không trống, lọc theo từ khóa trong tên nhân viên
+    if kw:
+        query = query.filter(NhanVien.tenNV.contains(kw) | NhanVien.hoNV.contains(kw))
+
+    return query.paginate(page=page, per_page=6)
 
 def total_employees():
     return NhanVien.query.count()
