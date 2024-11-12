@@ -2,10 +2,10 @@ from flask import Flask, render_template, request
 import os
 import json
 import hashlib
-from BusTicketSales.BusApp import main
-from BusTicketSales.BusApp.models import KhachHang, NhanVien, TuyenXe, Xe
-from BusTicketSales import BusApp
-
+from BusApp import main
+from BusApp.models import KhachHang, NhanVien, TuyenXe, Xe
+import BusApp
+import sqlite3
 
 def read_user():
     try:
@@ -62,3 +62,10 @@ def load_Xe():
 
 def total_Xe():
     return Xe.query.count()
+
+def delete_customer_from_db(customer_id):
+    connection = sqlite3.connect('D:/BusTicketSales/BusApp/data/database.db')
+    cursor = connection.cursor()
+    cursor.execute("DELETE FROM KhachHang WHERE idKhachHang = ?", (customer_id,))
+    connection.commit()
+    connection.close()
