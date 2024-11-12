@@ -67,7 +67,7 @@ def add_customer():
         soTaiKhoan = request.form['soTaiKhoan']
 
         # Kết nối và thêm dữ liệu vào database
-        connection = sqlite3.connect('D:/BusTicketSales/BusApp/data/database.db')
+        connection = sqlite3.connect('./data/database.db')
         cursor = connection.cursor()
         cursor.execute("""
             INSERT INTO KhachHang (hoKhach, tenKhach, soDienThoai, gioiTinh, email, ngaySinh, nganHang, soTaiKhoan) 
@@ -93,7 +93,7 @@ def delete_customer(customer_id):
         return jsonify({"success": False}), 500
 
 def get_db_connection():
-    conn = sqlite3.connect('D:/BusTicketSales/BusApp/data/database.db')
+    conn = sqlite3.connect('./data/database.db')
     conn.row_factory = sqlite3.Row
     return conn
 

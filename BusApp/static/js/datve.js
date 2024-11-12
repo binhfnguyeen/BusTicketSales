@@ -1,150 +1,80 @@
-window.onload = function() {
-    fetch("/api/vitri")
+function showResult() {
+    var diemDi = document.querySelector('[name="diem_di"]').value;
+    var diemDen = document.querySelector('[name="diem_den"]').value;
+    var benDi = document.querySelector('[name="ben_di"]').value;
+    var benDen = document.querySelector('[name="ben_den"]').value;
+    var ngayDi = document.getElementById('ngaydi').value;
+    var ngayVe = document.getElementById('ngayve').value;
+
+    localStorage.setItem('ngayDi', ngayDi);
+    localStorage.setItem('ngayVe', ngayVe);
+
+    fetch(`/api/chuyenxe?diem_di=${diemDi}&diem_den=${diemDen}&ben_di=${benDi}&ben_den=${benDen}`)
         .then(response => response.json())
         .then(data => {
-            const diemDiSelect = document.querySelector('select[name="diem_di"]');
-            const diemDenSelect = document.querySelector('select[name="diem_den"]');
-            const quanHuyenDiSelect = document.querySelector('select[name="quan_huyen_di"]')
-            const benDiSelect = document.querySelector('select[name="ben_di"]')
-            const quanHuyenDenSelect = document.querySelector('select[name="quan_huyen_den"]')
-            const benDenSelect = document.querySelector('select[name="ben_den"]')
-            data.diem_di.forEach(diem => {
-                diemDiSelect.innerHTML += `<option value="${diem}">${diem}</option>`;
-            });
-            data.diem_den.forEach(diem => {
-                diemDenSelect.innerHTML += `<option value="${diem}">${diem}</option>`;
-            });
-            data.quan_huyen_di.forEach(quan=>{
-                quanHuyenDiSelect.innerHTML += `<option value="${quan}">${quan}</option>`
-            })
-            data.quan_huyen_den.forEach(quan=>{
-                quanHuyenDenSelect.innerHTML += `<option value="${quan}">${quan}</option>`
-            })
-            data.ben_di.forEach(ben=>{
-                benDiSelect.innerHTML+= `<option value="${ben}">${ben}</option>`
-            })
-            data.ben_den.forEach(ben=>{
-                benDenSelect.innerHTML+= `<option value="${ben}">${ben}</option>`
-            })
-        })
-        .catch(error => console.error('Error fetching data:', error));
-};
-
-let diemDi;
-let diemDen;
-let quanHuyenDi;
-let quanHuyenDen;
-let benDi;
-let benDen;
-
-function getDiemDi(value){
-    diemDi = value;
-    console.log(diemDi);
-}
-
-function getDiemDen(value){
-    diemDen = value;
-    console.log(diemDen)
-}
-
-function getQuanHuyenDi(value){
-    quanHuyenDi = value;
-    console.log(quanHuyenDi)
-}
-
-function getQuanHuyenDen(value){
-    quanHuyenDen = value;
-    console.log(quanHuyenDen);
-}
-
-function getBenDi(value){
-    benDi = value;
-    console.log(benDi);
-}
-
-function getBenDen(value){
-    benDen = value;
-    console.log(benDen)
-}
-
-function cssResult(ngayDi, ngayVe) {
-    return `
-        <div class="d-flex flex-wrap justify-content-center" id="resultContainer">
-            <div class="card mb-3" style="width: 30%;">
-                <div class="card-body">
-                    <div class="container-sm">
-                        <table class="table table-bordered table-striped table-sm">
-                            <tbody>
-                                <tr><td><strong>Giá vé</strong></td><td><span>150k</span></td></tr>
-                                <tr><td><strong>Loại</strong></td><td><span>Giường nằm</span></td></tr>
-                                <tr><td><strong>Số chỗ</strong></td><td><span>30</span></td></tr>
-                                <tr><td><strong>Ngày đi</strong></td><td><span>${ngayDi}</span></td></tr>
-                                <tr><td><strong>Ngày về</strong></td><td><span>${ngayVe}</span></td></tr>
-                                <tr><td><strong>Điểm đi</strong></td><td><span>${diemDi}</span></td></tr>
-                                <tr><td><strong>Điểm đến</strong></td><td><span>${diemDen}</span></td></tr>
-                                <tr><td><strong>Biển số</strong></td><td><span>65D1-50354</span></td></tr>
-                                <tr><td><strong>Giá vé</strong></td><td><span>180k</span></td></tr>
-                                <tr><td><strong>Tổng số vé</strong></td><td><span>2</span></td></tr>
-                                <tr><td><strong>Tổng tiền</strong></td><td><span>360k</span></td></tr>
-                            </tbody>
-                        </table>
-                        <a href="/thanhtoan" class="btn btn-primary btn-sm">Đặt vé</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-}
-
-function showResult() {
-    document.querySelector('.bresult').style.display = 'none';
-    const ngayDi = document.getElementById("ngaydi").value;
-    const ngayVe = document.getElementById("ngayve").value;
-
-    if (diemDi && diemDen && ngayDi && ngayVe) {
-        const resultHtml = cssResult(ngayDi, ngayVe);
-        document.getElementById('resultContainer').outerHTML = resultHtml;
-        document.querySelector('.bresult').style.display = 'block';
-    } else {
-        alert("Vui lòng chọn đủ thông tin!");
-    }
-}
-
-function showFilterResult(){
-    document.querySelector('.bresult').style.display = 'none';
-    const ngayDi = document.getElementById("ngaydi").value;
-    const ngayVe = document.getElementById("ngayve").value;
-
-        if (diemDi && diemDen && ngayDi && ngayVe && quanHuyenDi && quanHuyenDen && benDi && benDen){
-            document.getElementById('resultContainer').outerHTML=`
-                <div class="d-flex flex-wrap justify-content-center" id="resultContainer">
+            if (data.status === "found") {
+                console.log("Tìm thấy chuyến xe:", data.data);
+                var resultContainer = document.getElementById('resultContainer');
+                resultContainer.innerHTML = '';
+                data.data.forEach(chuyenxe => {
+                    localStorage.setItem('diemDi', diemDi);
+                    localStorage.setItem('diemDen', diemDen);
+                    localStorage.setItem('benDi', benDi);
+                    localStorage.setItem('benDen', benDen);
+                    // Correct usage of template literals inside the loop
+                    var htmlContent = `
                     <div class="card mb-3" style="width: 30%;">
                         <div class="card-body">
-                            <div class="container-sm">
-                                <table class="table table-bordered table-striped table-sm">
-                                    <tbody>
-                                        <tr><td><strong>Giá vé</strong></td><td><span>150k</span></td></tr>
-                                        <tr><td><strong>Loại</strong></td><td><span>Giường nằm</span></td></tr>
-                                        <tr><td><strong>Số chỗ</strong></td><td><span>30</span></td></tr>
-                                        <tr><td><strong>Bến đi</strong></td><td><span>${benDi}</span></td></tr>
-                                        <tr><td><strong>Bến đến</strong></td><td><span>${benDen}</span></td></tr>
-                                        <tr><td><strong>Ngày đi</strong></td><td><span>${ngayDi}</span></td></tr>
-                                        <tr><td><strong>Ngày về</strong></td><td><span>${ngayVe}</span></td></tr>
-                                        <tr><td><strong>Điểm đi</strong></td><td><span>${diemDi}</span></td></tr>
-                                        <tr><td><strong>Điểm đến</strong></td><td><span>${diemDen}</span></td></tr>
-                                        <tr><td><strong>Biển số</strong></td><td><span>65D1-50354</span></td></tr>
-                                        <tr><td><strong>Giá vé</strong></td><td><span>180k</span></td></tr>
-                                        <tr><td><strong>Tổng số vé</strong></td><td><span>2</span></td></tr>
-                                        <tr><td><strong>Tổng tiền</strong></td><td><span>360k</span></td></tr>
-                                    </tbody>
-                                </table>
-                                <a href="/thanhtoan" class="btn btn-primary btn-sm">Đặt vé</a>
-                            </div>
+                            <table class="table table-bordered table-striped table-sm">
+                                <tbody>
+                                    <tr><td><strong>Bến đi</strong></td><td>${chuyenxe[3]}</td></tr>
+                                    <tr><td><strong>Bến đến</strong></td><td>${chuyenxe[4]}</td></tr>
+                                    <tr><td><strong>Điểm đi</strong></td><td>${chuyenxe[1]}</td></tr>
+                                    <tr><td><strong>Điểm đến</strong></td><td>${chuyenxe[2]}</td></tr>
+                                    <tr><td><strong>Ngày đi</strong></td><td>${ngayDi}</td></tr>
+                                    <tr><td><strong>Ngày về</strong></td><td>${ngayVe}</td></tr>
+                                    <tr><td><strong>Khoảng cách</strong></td><td>${chuyenxe[5]} km</td></tr>
+                                    <tr><td><strong>Giá vé</strong></td><td>${chuyenxe[6]} VND</td></tr>
+                                </tbody>
+                            </table>
+                            <a href="/thanhtoan" class="btn btn-primary btn-sm">Đặt vé</a>
                         </div>
                     </div>
-                </div>`;
-                document.querySelector('.bresult').style.display = 'block';
-        } else
-            alert("Vui lòng chọn đủ thông tin!");
+                    `;
+                    resultContainer.innerHTML += htmlContent;
+                });
+            } else {
+                console.log("Không tìm thấy chuyến xe.");
+                var resultContainer = document.getElementById('resultContainer');
+                resultContainer.innerHTML = '<p>Không tìm thấy chuyến xe với các thông tin đã nhập.</p>';
+            }
+        })
+        .catch(error => {
+            console.error("Lỗi khi gọi API:", error);
+            var resultContainer = document.getElementById('resultContainer');
+            resultContainer.innerHTML = '<p>Đã xảy ra lỗi khi truy xuất dữ liệu.</p>';
+        });
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+    let TTdiemDi = localStorage.getItem('diemDi');
+    let TTdiemDen = localStorage.getItem('diemDen');
+    let TTbenDi = localStorage.getItem('benDi');
+    let TTbenDen = localStorage.getItem('benDen');
+    let TTngayDi = localStorage.getItem('ngayDi');
+    let TTngayVe = localStorage.getItem('ngayVe');
+
+    TTdiemDi = TTdiemDi ? TTdiemDi : 'Chưa có thông tin';
+    TTdiemDen = TTdiemDen ? TTdiemDen : 'Chưa có thông tin';
+    TTbenDi = TTbenDi ? TTbenDi : 'Chưa có thông tin';
+    TTbenDen = TTbenDen ? TTbenDen : 'Chưa có thông tin';
+    TTngayDi = TTngayDi ? TTngayDi : 'Chưa có thông tin';
+    TTngayVe = TTngayVe ? TTngayVe : 'Chưa có thông tin';
+
+    document.getElementById('diemdi').textContent = TTdiemDi;
+    document.getElementById('diemden').textContent = TTdiemDen;
+    document.getElementById('bendi').textContent = TTbenDi;
+    document.getElementById('benden').textContent = TTbenDen;
+    document.getElementById('ngaydi').textContent = TTngayDi;
+    document.getElementById('ngayve').textContent = TTngayVe;
+});
