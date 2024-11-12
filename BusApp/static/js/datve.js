@@ -5,10 +5,10 @@ function showResult() {
     var benDen = document.querySelector('[name="ben_den"]').value;
     var ngayDi = document.getElementById('ngaydi').value;
     var ngayVe = document.getElementById('ngayve').value;
-
+    var choNgoi = document.querySelector('[name="cho_ngoi"]').value;
     localStorage.setItem('ngayDi', ngayDi);
     localStorage.setItem('ngayVe', ngayVe);
-
+    localStorage.setItem('choNgoi', choNgoi);
     fetch(`/api/chuyenxe?diem_di=${diemDi}&diem_den=${diemDen}&ben_di=${benDi}&ben_den=${benDen}`)
         .then(response => response.json())
         .then(data => {
@@ -21,6 +21,7 @@ function showResult() {
                     localStorage.setItem('diemDen', diemDen);
                     localStorage.setItem('benDi', benDi);
                     localStorage.setItem('benDen', benDen);
+                    localStorage.setItem('giaVe', chuyenxe[6]);
                     // Correct usage of template literals inside the loop
                     var htmlContent = `
                     <div class="card mb-3" style="width: 30%;">
@@ -33,6 +34,7 @@ function showResult() {
                                     <tr><td><strong>Điểm đến</strong></td><td>${chuyenxe[2]}</td></tr>
                                     <tr><td><strong>Ngày đi</strong></td><td>${ngayDi}</td></tr>
                                     <tr><td><strong>Ngày về</strong></td><td>${ngayVe}</td></tr>
+                                    <tr><td><strong>Chỗ ngồi đã chọn</strong></td><td>${choNgoi}</td></tr>
                                     <tr><td><strong>Khoảng cách</strong></td><td>${chuyenxe[5]} km</td></tr>
                                     <tr><td><strong>Giá vé</strong></td><td>${chuyenxe[6]} VND</td></tr>
                                 </tbody>
@@ -63,18 +65,22 @@ document.addEventListener('DOMContentLoaded', function() {
     let TTbenDen = localStorage.getItem('benDen');
     let TTngayDi = localStorage.getItem('ngayDi');
     let TTngayVe = localStorage.getItem('ngayVe');
-
+    let TTgiaVe = localStorage.getItem('giaVe');
+    let TTchoNgoi = localStorage.getItem('choNgoi');
     TTdiemDi = TTdiemDi ? TTdiemDi : 'Chưa có thông tin';
     TTdiemDen = TTdiemDen ? TTdiemDen : 'Chưa có thông tin';
     TTbenDi = TTbenDi ? TTbenDi : 'Chưa có thông tin';
     TTbenDen = TTbenDen ? TTbenDen : 'Chưa có thông tin';
     TTngayDi = TTngayDi ? TTngayDi : 'Chưa có thông tin';
     TTngayVe = TTngayVe ? TTngayVe : 'Chưa có thông tin';
-
+    TTgiaVe = TTgiaVe ? TTgiaVe : 'Chưa có thông tin';
+    TTchoNgoi = TTchoNgoi ? TTchoNgoi : 'Chưa có thông tin';
     document.getElementById('diemdi').textContent = TTdiemDi;
     document.getElementById('diemden').textContent = TTdiemDen;
     document.getElementById('bendi').textContent = TTbenDi;
     document.getElementById('benden').textContent = TTbenDen;
     document.getElementById('ngaydi').textContent = TTngayDi;
     document.getElementById('ngayve').textContent = TTngayVe;
+    document.getElementById('giave').textContent = TTgiaVe;
+    document.getElementById('chongoi').textContent = TTchoNgoi;
 });

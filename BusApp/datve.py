@@ -6,7 +6,7 @@ from flask import jsonify
 app = Flask(__name__)
 datve_blueprints = Blueprint("datve", __name__)
 
-stripe.api_key = "pk_test_51QKFWxHwA2xtXgiVY28lvYyNRSeIkIIVOb7vVR2Aj4uuf3nWhKEqdQZefcBsdXYYZlU4GvntWQRPitT53ifoCwXK005lLME6HA"
+stripe.api_key = "sk_test_51QKFWxHwA2xtXgiVV3nkxS8tuCsiDbIVbpOfLPtnoa82UGwlwyYRdlw9I2SnO3Ix6PtaReYomTMr6AhGUPCEW5kI00bovmtMxJ"
 def get_data_from_db(query, params):
     try:
         conn = sqlite3.connect('./data/database.db')
@@ -45,7 +45,7 @@ def get_bienso():
     return jsonify(data)
 
 
-@app.route('/charge', methods=['POST'])
+@datve_blueprints.route('/charge', methods=['POST'])
 def charge():
     try:
         # Tạo session thanh toán Stripe Checkout
@@ -56,7 +56,7 @@ def charge():
                     'price_data': {
                         'currency': 'usd',
                         'product_data': {
-                            'name': 'Sản phẩm ví dụ',
+                            'name': 'Vé xe',
                         },
                         'unit_amount': 1000,  # Số tiền là 10.00 USD (1000 cent)
                     },
@@ -68,9 +68,7 @@ def charge():
             cancel_url=request.host_url + 'cancel',
         )
 
-        return jsonify({
-            'id': session.id
-        })
+        return render_template("thanhtoan.html")
     except Exception as e:
         return str(e), 500
 
@@ -84,7 +82,7 @@ def cancel():
 
 @datve_blueprints.route('/checkout')
 def checkout():
-    return render_template('checkout.html', key='sk_test_51QKFWxHwA2xtXgiVV3nkxS8tuCsiDbIVbpOfLPtnoa82UGwlwyYRdlw9I2SnO3Ix6PtaReYomTMr6AhGUPCEW5kI00bovmtMxJ')
+    return render_template('checkout.html')
 
 @datve_blueprints.route('/datve')
 def index():
