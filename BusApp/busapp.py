@@ -3,21 +3,19 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 import io
 from flask import url_for, render_template, redirect, request, flash, make_response, session, jsonify
-from BusTicketSales.BusApp.main import login_blueprint
-from BusTicketSales.BusApp.datve import datve_blueprints
+from BusApp.main import login_blueprint
+from BusApp.datve import datve_blueprints
 import sqlite3
 import os
 import json
 import dao
 
-from BusTicketSales.BusApp import app
+from BusApp import app
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import random
 
-
-from BusTicketSales.BusApp import app
 app.register_blueprint(datve_blueprints)
 app.register_blueprint(login_blueprint)
 
@@ -58,17 +56,85 @@ def home_admin():
 
 @app.route('/UserAdmin/NhanVien')
 def user_admin_NV():
-    em = dao.load_employees()
+    kw = request.args.get('kw')
+    em = dao.load_employees(kw=kw)
     total = dao.total_employees()
     return render_template("userAd_NV.html", employees=em, sum=total)
 
+@app.route('/ThemNhanVien', methods=['GET', 'POST'])
+def add_employee():
+    if request.method == 'POST':
+        # Xử lý dữ liệu từ form
+        hoNV = request.form['hoKhach']
+        tenNV = request.form['tenKhach']
+        soDienThoai = request.form['soDienThoai']
+        gioiTinh = request.form['gioiTinh']
+        email = request.form['email']
+        ngaySinh = request.form['ngaySinh']
+        nganHang = request.form['nganHang']
+        soTaiKhoan = request.form['soTaiKhoan']
+
+        # Kết nối và thêm dữ liệu vào database
+        connection = sqlite3.connect('./data/database.db')
+        cursor = connection.cursor()
+        cursor.execute("""
+            INSERT INTO NhanVien (hoNV, tenNV, soDienThoai, gioiTinh, email, ngaySinh, nganHang, soTaiKhoan) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """, (hoNV, tenNV, soDienThoai, gioiTinh, email, ngaySinh, nganHang, soTaiKhoan))
+        connection.commit()
+        connection.close()
+
+        # Chuyển hướng về trang chính sau khi thêm thành công
+        return redirect('/HomeAdmin')
+
+    # Nếu là GET, hiển thị trang thêm khách hàng
+    return render_template('them_NV.html')
+
+@app.route('/xoa_NV/<int:employee_id>', methods=['DELETE'])
+def delete_employee(employee_id):
+    try:
+        # Giả sử bạn có một hàm để kết nối và xóa dữ liệu từ database
+        dao.delete_customer_from_db(employee_id)  # X óa nhan vien theo ID
+        return jsonify({"success": True}), 200
+    except Exception as e:
+        print(e)
+        return jsonify({"success": False}), 500
+
+@app.route('/chinhSua_NV/<int:id>')
+def edit_employee(id):
+    conn = get_db_connection()
+    employee = conn.execute('SELECT * FROM NhanVien WHERE idNhanVien = ?', (id,)).fetchone()
+    conn.close()
+    if employee:
+        return render_template('capNhat_NV.html', employee=employee)
+    return "Customer not found", 404
+
+# Route để cập nhật thông tin khách hàng
+@app.route('/capNhat_NV/<int:id>', methods=['POST'])
+def update_employee(id):
+    hoNV = request.form['hoNV']
+    tenNV = request.form['tenNV']
+    soDienThoai = request.form['soDienThoai']
+    gioiTinh = request.form['gioiTinh']
+    email = request.form['email']
+    ngaySinh = request.form['ngaySinh']
+    nganHang = request.form['nganHang']
+    soTaiKhoan = request.form['soTaiKhoan']
+
+    conn = get_db_connection()
+    conn.execute('''UPDATE NhanVien SET hoNV = ?, tenNV = ?, soDienThoai = ?, gioiTinh = ?, 
+                    email = ?, ngaySinh = ?, nganHang = ?, soTaiKhoan = ? WHERE idNhanVien = ?''',
+                 (hoNV, tenNV, soDienThoai, gioiTinh, email, ngaySinh, nganHang, soTaiKhoan, id))
+    conn.commit()
+    conn.close()
+    return redirect(url_for('home_admin'))  # Chuyển hướng về trang chủ sau khi cập nhật thành công
 
 @app.route('/UserAdmin/KhachHang')
 def user_admin_KH():
-    cus = dao.load_customers()
+    kw = request.args.get('kw')
+    cus = dao.load_customers(kw=kw)
     total = dao.total_customers()
     return render_template("userAd_KH.html", customers=cus, sum=total)
-
 
 @app.route('/ThemKhachHang', methods=['GET', 'POST'])
 def add_customer():

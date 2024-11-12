@@ -121,8 +121,11 @@
             </div>
             <!-- Search and Add Button -->
             <div class="d-flex justify-content-between mb-3">
-                <input type="text" class="form-control w-25" placeholder="Search...">
-                <button class="btn btn-primary"><i class="fa fa-plus"></i> Thêm nhân viên</button>
+                <form class="d-flex" method="get" action="/UserAdmin/NhanVien">
+                    <input type="text" name="kw" class="form-control me-2" placeholder="Search..." value="{{ request.args.get('kw', '') }}">
+                    <button type="submit" class="btn btn-primary">Tìm</button>
+                </form>
+                <a href="/ThemNhanVien" class="btn btn-primary"><i class="fa fa-plus"></i> Thêm nhân viên</a>
             </div>
 
             <!-- Employee Table -->
@@ -151,7 +154,10 @@
                         <td>{{ c.ngaySinh }}</td>
                         <td>{{ c.nganHang }}</td>
                         <td>{{ c.soTaiKhoan }}</td>
-                        <td><button class="btn btn-danger"><i class="fa fa-trash"></i></button></td>
+                        <td>
+                            <button class="btn btn-danger delete-btn" data-id="{{ c.idNhanVien }}"><i class="fa fa-trash"></i></button>
+                            <a href="{{ url_for('edit_employee', id=c.idNhanVien) }}" class="btn btn-primary"><i class="fa fa-edit"></i></a>
+                        </td>
                     </tr>
                 {% endfor %}
 
@@ -191,21 +197,30 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Hàm để đếm và cập nhật tổng số khách hàng
-        function updateTotalEmployees() {
-            const tableBody = document.getElementById("employee-table-body");
-            if (tableBody) {
-                const rowCount = tableBody.getElementsByTagName("tr").length;
-                document.getElementById("total-employees").innerText = "Tổng số nhân viên: " + rowCount;
-            } else {
-                console.error("Không tìm thấy phần tử với ID 'employee-table-body'");
-            }
-        }
+document.addEventListener("DOMContentLoaded", function() {
+    const deleteButtons = document.querySelectorAll(".delete-btn");
 
-        // Cập nhật tổng số khách hàng khi trang được tải
-        updateTotalEmployees();
+    deleteButtons.forEach(button => {
+        button.addEventListener("click", function() {
+            const employeeId = this.getAttribute("data-id");
+
+            if (confirm("Bạn có chắc chắn muốn xóa khách hàng này?")) {
+                fetch(`/xoa_NV/${employeeId}`, {
+                    method: 'DELETE'
+                })
+                .then(response => {
+                    if (response.ok) {
+                        this.closest('tr').remove(); // Xóa hàng khỏi bảng nếu thành công
+                        alert("Đã xóa thành công!");
+                    } else {
+                        alert("Xóa không thành công. Vui lòng thử lại.");
+                    }
+                })
+                .catch(error => console.error("Error:", error));
+            }
+        });
     });
+});
 </script>
 
 </body>

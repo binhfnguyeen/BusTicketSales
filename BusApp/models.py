@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Date, ForeignKey, REAL
 from sqlalchemy.orm import relationship
-from BusTicketSales.BusApp import db, app
+from BusApp import db, app
 from datetime import datetime
 
 class KhachHang(db.Model):
