@@ -19,6 +19,8 @@ def get_data_from_db(query, params):
         return None
     finally:
         conn.close()
+
+
 @datve_blueprints.route("/api/chuyenxe", methods=["GET"])
 def get_chuyenxe():
     diem_di = request.args.get('diem_di')
@@ -35,6 +37,7 @@ def get_chuyenxe():
         return jsonify({"status": "found", "data": result})
     else:
         return jsonify({"status": "not_found"})
+
 
 @datve_blueprints.route("/api/bienso")
 def get_bienso():
@@ -72,17 +75,21 @@ def charge():
     except Exception as e:
         return str(e), 500
 
+
 @datve_blueprints.route('/success')
 def success():
     return 'Thanh toán thành công!'
+
 
 @datve_blueprints.route('/cancel')
 def cancel():
     return 'Thanh toán bị hủy.'
 
+
 @datve_blueprints.route('/checkout')
 def checkout():
     return render_template('checkout.html')
+
 
 @datve_blueprints.route('/datve')
 def index():
