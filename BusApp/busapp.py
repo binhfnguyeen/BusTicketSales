@@ -19,7 +19,6 @@ import random
 app.register_blueprint(datve_blueprints)
 app.register_blueprint(login_blueprint)
 
-
 @app.route('/thanhtoan')
 def thanh_toan():
     return render_template("thanhtoan.html")
