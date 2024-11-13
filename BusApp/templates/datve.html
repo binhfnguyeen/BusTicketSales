@@ -2,179 +2,124 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Trang Dat Ve</title>
+    <title>Trang Đặt Vé</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{url_for('static', filename='css/datve.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/datve.css') }}">
+    <script src="{{ url_for('static', filename='js/datve.js') }}"></script>
 </head>
-<script src="{{ url_for('static', filename='js/datve.js') }}"></script>
 <body class="bg">
+
 <header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#"><img src="./static/data/bus.png" alt="My Bus Logo" class="logo"></a>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="#"><img src="{{ url_for('static', filename='data/bus.png') }}" alt="My Bus Logo"
+                                              class="logo"></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="/">Trang chủ</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="/lichtrinh">Lịch trình</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/ttlienhe">Liên hệ</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/lshoadon">Hóa đơn</a>
-                </li>
+                <li class="nav-item"><a class="nav-link" href="/">Trang chủ</a></li>
+                <li class="nav-item active"><a class="nav-link" href="/lichtrinh">Lịch trình</a></li>
+                <li class="nav-item"><a class="nav-link" href="/ttlienhe">Liên hệ</a></li>
+                <li class="nav-item"><a class="nav-link" href="/lshoadon">Hóa đơn</a></li>
+                <li class="nav-item"><a class="nav-link" href="/datve">Đặt vé</a></li>
             </ul>
         </div>
     </nav>
 </header>
-<div class="container my-4 ">
-    <div class="row">
-        <div class="col-md-3">
-            <div><label>Điểm đi</label></div>
-            <div>
-                <select name="diem_di" class="form-select" onchange="getDiemDi(this.value)">
-                    <option value="" disabled selected>Chọn điểm đến</option>
-                </select>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div><label>Điểm đến</label></div>
-            <div>
-                <select name="diem_den" class="form-select" onchange="getDiemDen(this.value)">
-                    <option value="" disabled selected>Chọn điểm đến</option>
 
-                </select>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div><label>Ngày đi</label></div>
-            <div><input id="ngaydi" type="date" class="form-control"></div>
-        </div>
-        <div class="col-md-3">
-            <div><label>Ngày về</label></div>
-            <div><input id="ngayve" type="date" class="form-control"></div>
-        </div>
-        <div class="col-md-2 d-flex align-items-end">
-            <button class="btn btn-danger w-100 btn1" onclick="showResult()">Tìm chuyến xe</button>
-        </div>
-    </div>
-</div>
 <div class="container my-4">
     <div class="row">
         <div class="col-md-3">
-            <div><label>Chọn quận huyện đi:</label></div>
-            <div>
-                <select name="quan_huyen_di" class="form-select" onchange="getQuanHuyenDi(this.value)">
-                    <option value="" disabled selected>Chọn điểm đến</option>
-                </select>
-            </div>
+            <label>Điểm đi</label>
+            <select name="diem_di" class="form-select">
+                <option value="" disabled selected>Chọn điểm đến</option>
+                <option value="Hà Nội">Hà Nội</option>
+                <option value="Bạc Liêu">Bạc Liêu</option>
+            </select>
         </div>
         <div class="col-md-3">
-            <div><label>Chọn bến đi:</label></div>
-            <div>
-                <select name="ben_di" class="form-select" onchange="getBenDi(this.value)">
-                    <option value="" disabled selected>Chọn điểm đến</option>
-                </select>
-            </div>
+            <label>Điểm đến</label>
+            <select name="diem_den" class="form-select">
+                <option value="" disabled selected>Chọn điểm đến</option>
+                <option value="Bắc Ninh">Bắc Ninh</option>
+                <option value="Vĩnh Phúc">Vĩnh Phúc</option>
+                <option value="Hưng Yên">Hưng Yên</option>
+                <option value="Cà Mau">Cà Mau</option>
+                <option value="Hồ Chí Minh">Hồ Chí Minh</option>
+            </select>
         </div>
         <div class="col-md-3">
-            <div><label>Chọn quận huyện đến:</label></div>
-            <div>
-                <select name="quan_huyen_den" class="form-select" onchange="getQuanHuyenDen(this.value)">
-                    <option value="" disabled selected>Chọn điểm đến</option>
-                </select>
-            </div>
+            <label>Bến đi</label>
+            <select name="ben_di" class="form-select">
+                <option value="" disabled selected>Chọn bến đi</option>
+                <option value="Bến xe Giáp Bát">Bến xe Giáp Bát</option>
+                <option value="Bến xe Nước Ngầm">Bến xe Nước Ngầm</option>
+                <option value="Bến xe Vĩnh Yên">Bến xe Vĩnh Yên</option>
+                <option value="Bến xe Miền Đông">Bến xe Miền Đông</option>
+                <option value="Bến xe Miền Tây">Bến xe Miền Tây</option>
+                <option value="Bến xe Cần Thơ">Bến xe Cần Thơ</option>
+                <option value="Bến xe Bạc Liêu">Bến xe Bạc Liêu</option>
+            </select>
         </div>
         <div class="col-md-3">
-            <div><label>Chọn bến đến:</label></div>
-            <div>
-                <select name="ben_den" class="form-select" onchange="getBenDen(this.value)">
-                    <option value="" disabled selected>Chọn điểm đến</option>
-                </select>
-            </div>
+            <label>Bến đến</label>
+            <select name="ben_den" class="form-select">
+                <option value="" disabled selected>Chọn bến đến</option>
+                <option value="Bến xe Bắc Ninh">Bến xe Bắc Ninh</option>
+                <option value="Bến xe Vĩnh Yên">Bến xe Vĩnh Yên</option>
+                <option value="Bến xe Hưng Yên">Bến xe Hưng Yên</option>
+                <option value="Bến xe Chợ Lớn">Bến xe Chợ Lớn</option>
+                <option value="Bến xe An Sương">Bến xe An Sương</option>
+                <option value="Bến xe Miền Tây">Bến xe Miền Tây</option>
+                <option value="Bến xe Sóc Trăng">Bến xe Sóc Trăng</option>
+                <option value="Bến xe Cà Mau">Bến xe Cà Mau</option>
+            </select>
         </div>
-        <button class="btn btn-secondary mt-3 btn1" onclick="showFilterResult()">Lọc chuyến xe</button>
+        <div class="col-md-3 mt-3">
+            <label>Ngày đi</label>
+            <input id="ngaydi" type="date" class="form-control">
+        </div>
+        <div class="col-md-3 mt-3">
+            <label>Ngày về</label>
+            <input id="ngayve" type="date" class="form-control">
+        </div>
+        <div class="col-md-3 mt-3">
+            <label>Chọn chỗ ngồi</label>
+            <select name="cho_ngoi" class="form-select">
+                <option value="" disabled selected>Chọn ghế</option>
+                <option value="Ghế 1 - Trệt">Ghế 1 - Trệt</option>
+                <option value="Ghế 2 - Trệt">Ghế 2 - Trệt</option>
+                <option value="Ghế 3 - Trệt">Ghế 3 - Trệt</option>
+                <option value="Ghế 4 - Trệt">Ghế 4 - Trệt</option>
+                <option value="Ghế 5 - Trệt">Ghế 5 - Trệt</option>
+                <option value="Ghế 1 - Trên">Ghế 1 - Trên</option>
+                <option value="Ghế 2 - Trên">Ghế 2 - Trên</option>
+                <option value="Ghế 3 - Trên">Ghế 3 - Trên</option>
+                <option value="Ghế 4 - Trên">Ghế 4 - Trên</option>
+                <option value="Ghế 5 - Trên">Ghế 5 - Trên</option>
+            </select>
+        </div>
+        <div class="col-md-3 mt-4 d-flex justify-content-end">
+            <button class="btn btn-danger btn1" onclick="showResult()">Tìm chuyến xe</button>
+        </div>
     </div>
 </div>
-<div class="bresult container my-4">
-    <h5>Kết quả:</h5>
-    <div class="d-flex flex-wrap justify-content-center" id="resultContainer">
+
+<div class="container my-4">
+    <div id="resultContainer" class="d-flex flex-wrap justify-content-center">
         <div class="card mb-3" style="width: 30%;">
-            <div class="card-body">
-                <div class="container-sm">
-                    <table class="table table-bordered table-striped table-sm">
-                        <tbody>
-                        <tr>
-                            <td><strong>Giá vé</strong></td>
-                            <td><span>150k</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Loại</strong></td>
-                            <td><span>Giường nằm</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Số chỗ</strong></td>
-                            <td><span>30</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Bến đi</strong></td>
-                            <td><span>BX Ô Môn</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Bến đến</strong></td>
-                            <td><span>BX Miền Tây</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Ngày đi</strong></td>
-                            <td><span>2023-12-01</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Ngày về</strong></td>
-                            <td><span>2023-12-16</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Điểm đi</strong></td>
-                            <td><span>Cần Thơ</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Điểm đến</strong></td>
-                            <td><span>Sài Gòn</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Biển số</strong></td>
-                            <td><span>65D1-50354</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Giá vé</strong></td>
-                            <td><span>180k</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Tổng số vé</strong></td>
-                            <td><span>2</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Tổng tiền</strong></td>
-                            <td><span>360k</span></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <a href="/thanhtoan" class="btn btn-primary btn-sm">Đặt vé</a>
+            <div class="card-body d-flex justify-content-center align-items-center" style="height: 150px;">
+                <div class="alert alert-info">
+                    Vui lòng chọn chuyến đi!
                 </div>
             </div>
         </div>
-
     </div>
-
 </div>
 
-</body>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
@@ -184,4 +129,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+
+</body>
 </html>

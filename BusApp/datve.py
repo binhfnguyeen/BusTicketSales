@@ -1,17 +1,40 @@
-import os
 import sqlite3
+
+import stripe
 from flask import Blueprint, Flask, render_template, request
 from flask import jsonify
-
 app = Flask(__name__)
 datve_blueprints = Blueprint("datve", __name__)
-def get_data_from_db(query):
-    conn = sqlite3.connect(os.path.join(os.path.dirname(__file__), 'data/database.db'))
-    cursor = conn.cursor()
-    cursor.execute(query)
-    data = cursor.fetchall()
-    conn.close()
-    return data
+
+stripe.api_key = "sk_test_51QKFWxHwA2xtXgiVV3nkxS8tuCsiDbIVbpOfLPtnoa82UGwlwyYRdlw9I2SnO3Ix6PtaReYomTMr6AhGUPCEW5kI00bovmtMxJ"
+def get_data_from_db(query, params):
+    try:
+        conn = sqlite3.connect('./data/database.db')
+        cursor = conn.cursor()
+        cursor.execute(query, params)
+        result = cursor.fetchall()
+        return result
+    except sqlite3.Error as e:
+        print("Lỗi cơ sở dữ liệu:", e)
+        return None
+    finally:
+        conn.close()
+@datve_blueprints.route("/api/chuyenxe", methods=["GET"])
+def get_chuyenxe():
+    diem_di = request.args.get('diem_di')
+    diem_den = request.args.get('diem_den')
+    ben_di = request.args.get('ben_di')
+    ben_den = request.args.get('ben_den')
+    query = """
+    SELECT * FROM Chuyen_Xe
+    WHERE DiemDi = ? AND DiemDen = ? AND BenDi = ? AND BenDen = ?
+    """
+    result = get_data_from_db(query, (diem_di, diem_den, ben_di, ben_den))
+
+    if result:
+        return jsonify({"status": "found", "data": result})
+    else:
+        return jsonify({"status": "not_found"})
 
 @datve_blueprints.route("/api/bienso")
 def get_bienso():
@@ -21,58 +44,50 @@ def get_bienso():
     }
     return jsonify(data)
 
-@datve_blueprints.route("/api/vitri")
-def get_location():
-    diem_di = get_data_from_db("SELECT DISTINCT name FROM provinces")
-    diem_den = get_data_from_db("SELECT DISTINCT name FROM provinces")
-    quan_huyen_di = get_data_from_db("SELECT DISTINCT name FROM districts")
-    quan_huyen_den = get_data_from_db("SELECT DISTINCT name FROM districts")
-    ben_di = get_data_from_db("SELECT DISTINCT ten_ben_xe FROM Ben_Xe")
-    ben_den = get_data_from_db("SELECT DISTINCT ten_ben_xe FROM Ben_Xe")
 
-    data = {
-        "diem_di": [row[0] for row in diem_di],
-        "diem_den": [row[0] for row in diem_den],
-        "quan_huyen_di": [row[0] for row in quan_huyen_di],
-        "ben_di": [row[0] for row in ben_di],
-        "quan_huyen_den": [row[0] for row in quan_huyen_den],
-        "ben_den": [row[0] for row in ben_den]
-    }
+@datve_blueprints.route('/charge', methods=['POST'])
+def charge():
+    try:
+        # Tạo session thanh toán Stripe Checkout
+        session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            line_items=[
+                {
+                    'price_data': {
+                        'currency': 'usd',
+                        'product_data': {
+                            'name': 'Vé xe',
+                        },
+                        'unit_amount': 1000,  # Số tiền là 10.00 USD (1000 cent)
+                    },
+                    'quantity': 1,
+                },
+            ],
+            mode='payment',
+            success_url=request.host_url + 'success',
+            cancel_url=request.host_url + 'cancel',
+        )
 
-    return jsonify(data)
+        return render_template("thanhtoan.html")
+    except Exception as e:
+        return str(e), 500
+
+@datve_blueprints.route('/success')
+def success():
+    return 'Thanh toán thành công!'
+
+@datve_blueprints.route('/cancel')
+def cancel():
+    return 'Thanh toán bị hủy.'
+
+@datve_blueprints.route('/checkout')
+def checkout():
+    return render_template('checkout.html')
 
 @datve_blueprints.route('/datve')
 def index():
     return render_template("datve.html")
 
 
-@datve_blueprints.route('/api/results')
-def get_results():
-    diem_di = request.args.get('diem_di')
-    diem_den = request.args.get('diem_den')
-
-    # Truy vấn database để lấy kết quả dựa trên điểm đi và điểm đến
-    query = f"SELECT * FROM xe WHERE diem_di = ? AND diem_den = ?"
-    results = get_data_from_db(query, (diem_di, diem_den))
-
-    # Định dạng dữ liệu trả về
-    data = []
-    for result in results:
-        data.append({
-            'gia_ve': result[0],  # Ví dụ: cột 'gia_ve'
-            'loai': result[1],  # Ví dụ: cột 'loai'
-            'so_cho': result[2],  # Cột 'so_cho'
-            'ben_di': result[3],  # Cột 'ben_di'
-            'ben_den': result[4],  # Cột 'ben_den'
-            'ngay_di': result[5],  # Cột 'ngay_di'
-            'ngay_ve': result[6],  # Cột 'ngay_ve'
-            'diem_di': result[7],  # Cột 'diem_di'
-            'diem_den': result[8],  # Cột 'diem_den'
-            'bien_so': result[9]  # Cột 'bien_so'
-        })
-
-    return jsonify(data)
-
 if __name__ == "main":
-    get_location()
     app.run(debug=True)

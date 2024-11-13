@@ -112,7 +112,7 @@
         <main class="col-md-10 ml-sm-auto px-4">
             <!-- Header -->
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h2>Người dùng / Nhân Viên</h2>
+                <h2>Xe / Danh Sách Xe</h2>
                 <div class="text-right">
                     <span>Xin chào, Admin</span>
                     <img src="{{ url_for('static', filename='data/avatar.png') }}" alt="Avatar" class="rounded-circle"
@@ -121,11 +121,8 @@
             </div>
             <!-- Search and Add Button -->
             <div class="d-flex justify-content-between mb-3">
-                <form class="d-flex" method="get" action="/UserAdmin/NhanVien">
-                    <input type="text" name="kw" class="form-control me-2" placeholder="Search..." value="{{ request.args.get('kw', '') }}">
-                    <button type="submit" class="btn btn-primary">Tìm</button>
-                </form>
-                <a href="/ThemNhanVien" class="btn btn-primary"><i class="fa fa-plus"></i> Thêm nhân viên</a>
+                <input type="text" class="form-control w-25" placeholder="Search...">
+                <button class="btn btn-primary"><i class="fa fa-plus"></i> Thêm xe</button>
             </div>
 
             <!-- Employee Table -->
@@ -133,40 +130,29 @@
                 <thead class="thead-light">
                     <tr>
                         <th>ID</th>
-                        <th>Họ Tên</th>
-                        <th>Số Điện Thoại</th>
-                        <th>Giới Tính</th>
-                        <th>Email</th>
-                        <th>Ngày Sinh</th>
-                        <th>Ngân Hàng</th>
-                        <th>Số Tài Khoản</th>
+                        <th>Biển số</th>
+                        <th>Sức chứa</th>
+                        <th>Tình trạng xe</th>
                         <th>Hành Động</th>
                     </tr>
                 </thead>
-                <tbody id="employee-table-body">
-                    {% for c in employees %}
+
+                <tbody id="customer-table-body">
+                {% for c in Xe %}
                     <tr>
-                        <td>{{ c.idNhanVien }}</td>
-                        <td>{{ c.hoNV + ' ' + c.tenNV }}</td>
-                        <td>{{ c.soDienThoai }}</td>
-                        <td>{{ c.gioiTinh }}</td>
-                        <td>{{ c.email }}</td>
-                        <td>{{ c.ngaySinh }}</td>
-                        <td>{{ c.nganHang }}</td>
-                        <td>{{ c.soTaiKhoan }}</td>
-                        <td>
-                            <button class="btn btn-danger delete-btn" data-id="{{ c.idNhanVien }}"><i class="fa fa-trash"></i></button>
-                            <a href="{{ url_for('edit_employee', id=c.idNhanVien) }}" class="btn btn-primary"><i class="fa fa-edit"></i></a>
-                        </td>
+                        <td>{{ c.idXe }}</td>
+                        <td>{{ c.bienSo }}</td>
+                        <td>{{ c.sucChua }}</td>
+                        <td>{{ c.tinhTrangXe }}</td>
+                        <td><button class="btn btn-danger"><i class="fa fa-trash"></i></button></td>
                     </tr>
                 {% endfor %}
-
                 </tbody>
             </table>
 
             <!-- Total Employees -->
             <div class="mb-2">
-                <h5 id="total-customers">Tổng số nhân viên: {{ sum }}</h5>
+                <h5 id="total-customers">Tổng số tuyến xe: {{ sum }}</h5>
             </div>
 
 
@@ -174,14 +160,14 @@
             <nav>
                 <ul class="pagination justify-content-center">
                     <li class="page-item">
-                        {% if employees.has_prev %}
-                            <a class="page-link" href="{{ url_for('user_admin_NV', page=customers.prev_num) }}">Previous</a>
+                        {% if Xe.has_prev %}
+                            <a class="page-link" href="{{ url_for('xe_admin', page=Xe.prev_num) }}">Previous</a>
                         {% endif %}
                     </li>
-                    <li class="page-item active"><span class="page-link">Trang {{ employees.page }} trên {{ employees.pages }}</span></li>
+                    <li class="page-item active"><span class="page-link">Trang {{ Xe.page }} trên {{ Xe.pages }}</span></li>
                     <li class="page-item">
-                        {% if employees.has_next %}
-                            <a class="page-link" href="{{ url_for('user_admin_NV', page=customers.next_num) }}">Next</a>
+                        {% if Xe.has_next %}
+                            <a class="page-link" href="{{ url_for('xe_admin', page=Xe.next_num) }}">Next</a>
                         {% endif %}
                     </li>
                 </ul>
@@ -196,32 +182,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    const deleteButtons = document.querySelectorAll(".delete-btn");
 
-    deleteButtons.forEach(button => {
-        button.addEventListener("click", function() {
-            const employeeId = this.getAttribute("data-id");
-
-            if (confirm("Bạn có chắc chắn muốn xóa khách hàng này?")) {
-                fetch(`/xoa_NV/${employeeId}`, {
-                    method: 'DELETE'
-                })
-                .then(response => {
-                    if (response.ok) {
-                        this.closest('tr').remove(); // Xóa hàng khỏi bảng nếu thành công
-                        alert("Đã xóa thành công!");
-                    } else {
-                        alert("Xóa không thành công. Vui lòng thử lại.");
-                    }
-                })
-                .catch(error => console.error("Error:", error));
-            }
-        });
-    });
-});
-</script>
 
 </body>
 </html>

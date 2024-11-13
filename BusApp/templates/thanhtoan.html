@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trang thanh toán</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pzjw8f+ua7Kw1TIq0v8Fq0eD5X+zB0FfO59zFosG3hF8T2F5LLO1gbBBXyQbw6Vp" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -38,31 +38,39 @@
                         </tr>
                         <tr>
                             <td><strong>Điểm đi</strong></td>
-                            <td>Cần Thơ</td>
+                            <td id="diemdi">Cần Thơ</td>
                         </tr>
                         <tr>
                             <td><strong>Điểm đến</strong></td>
-                            <td>Sài Gòn</td>
+                            <td id="diemden">Sài Gòn</td>
                         </tr>
                         <tr>
                             <td><strong>Ngày đi</strong></td>
-                            <td>2023-12-01</td>
+                            <td id="ngaydi">2023-12-01</td>
                         </tr>
                         <tr>
                             <td><strong>Ngày về</strong></td>
-                            <td>2023-12-16</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Số lượng ghế</strong></td>
-                            <td>2</td>
+                            <td id="ngayve">2023-12-16</td>
                         </tr>
                         <tr>
                             <td><strong>Điểm lên xe</strong></td>
-                            <td>BX miền Tây</td>
+                            <td id="bendi">BX miền Tây</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Điểm xuống xe</strong></td>
+                            <td id="benden">BX miền Tây</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Chỗ ngồi đã chọn</strong></td>
+                            <td id="chongoi">Ghế 1 - Trệt</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Khoảng cách</strong></td>
+                            <td id="khoangcach">50 km</td>
                         </tr>
                         <tr>
                             <td><strong>Tổng số tiền</strong></td>
-                            <td>360.000đ</td>
+                            <td id="giave">180000 VND</td>
                         </tr>
                         </tbody>
                     </table>
@@ -105,70 +113,10 @@
     <div class="col-12 text-center">
         <div class="d-flex justify-content-center gap-3">
             <a href="/datve" class="btn btn-secondary btn-lg">Quay lại</a>
-            <a href="#" id="btnThanhToan" class="btn btn-primary btn-lg">Thanh toán</a>
+            <a href="/checkout" id="btnThanhToan" class="btn btn-primary btn-lg">Thanh toán</a>
         </div>
     </div>
 </div>
-</div>
-
-<div id="paymentModal" class="modal" style="display: none;">
-    <div class="modal-content">
-        <div class="modal-header">
-            <span id="closePaymentModal" class="close">&times;</span>
-        </div>
-        <div class="modal-body">
-            <!-- Thẻ thanh toán -->
-            <div class="container p-0">
-                <div class="card px-4">
-                    <p class="h8 py-3">Thanh toán</p>
-                    <div class="row gx-3">
-                        <div class="col-12">
-                            <div class="d-flex flex-column">
-                                <p class="text mb-1">Họ và tên:</p>
-                                <input class="form-control mb-3" type="text" id="personName" placeholder="Họ và tên" value="">
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="d-flex flex-column">
-                                <p class="text mb-1">Số tài khoản:</p>
-                                <input class="form-control mb-3" type="text" id="cardNumber" placeholder="Nhập số thẻ">
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="d-flex flex-column">
-                                <p class="text mb-1">Expiry</p>
-                                <input class="form-control mb-3" type="text" id="expiry" placeholder="MM/YYYY">
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="d-flex flex-column">
-                                <p class="text mb-1">CVV/CVC</p>
-                                <input class="form-control mb-3 pt-2 " type="password" id="cvv" placeholder="***">
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="d-flex justify-content-center gap-3">
-                                <a href="#" id="btnXacNhanTT" class="btn btn-primary btn-lg">Thanh toán</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal Thông báo -->
-<div id="noti" class="modal" style="display: none;">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h4 class="modal-title">Thông báo</h4>
-            <span id="dongBtn" class="close">&times;</span>
-        </div>
-        <div class="modal-body">
-            <div id="notiMessage"></div>
-        </div>
-    </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -179,25 +127,6 @@
     const noti = document.getElementById('noti');
     const notiMessage = document.getElementById('notiMessage');
     const dongBtn = document.getElementById('dongBtn');
-
-    // Hiển thị modal thanh toán khi nhấn nút "Thanh toán"
-    btnThanhToan.onclick = function() {
-        paymentModal.style.display = "block";
-    }
-
-    // Đóng modal thanh toán khi nhấn vào nút đóng
-    closePaymentModal.onclick = function() {
-        paymentModal.style.display = "none";
-    }
-
-    // Đóng modal khi nhấn vào phần nền ngoài modal
-    window.onclick = function(event) {
-        if (event.target == paymentModal) {
-            paymentModal.style.display = "none";
-        } else if (event.target == noti) {
-            noti.style.display = "none";
-        }
-    }
 
     document.getElementById('btnXacNhanTT').onclick = function() {
     const personName = document.getElementById('personName').value.trim();
