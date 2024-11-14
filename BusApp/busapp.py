@@ -23,7 +23,7 @@ app.register_blueprint(login_blueprint)
 def thanh_toan():
     return render_template("thanhtoan.html")
 
-
+name = ''
 @app.route('/')
 def trang_chu():
     with sqlite3.connect('data/database.db') as conn:
@@ -355,10 +355,10 @@ def tt_lien_he():
     return render_template("ThongTinLienHe.html")
 
 
-@app.route('/lichtrinh')
+@app.route('/lichtrinh', methods=["GET", "POST"])
 def lich_trinh():
-    diemDi = request.args.get("diemDi")
-    diemDen = request.args.get("diemDen")
+    diemDi = request.form.get("diemDi")
+    diemDen = request.form.get("diemDen")
     data = getLichTrinh(diemDi, diemDen)
     return render_template("lichtrinh.html", data=data)
 
@@ -367,14 +367,13 @@ def getLichTrinh(diemDi=None, diemDen=None):
     db_path = os.path.join(os.path.dirname(__file__), 'data/database.db')
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
-    query = (
-        'SELECT BenXeDi.ten_ben_xe AS ten_diem_di, BenXeDen.ten_ben_xe AS ten_diem_den, TuyenDuong.khoangCach, LichTrinh.thoiGianDi ' 'FROM LichTrinh JOIN  TuyenDuong ON LichTrinh.idTuyenDuong = TuyenDuong.idTuyenDuong JOIN Ben_Xe AS BenXeDi ON TuyenDuong.diemDi = BenXeDi.ben_xe_id ' 'JOIN Ben_Xe AS BenXeDen ON TuyenDuong.diemDen = BenXeDen.ben_xe_id; ')
+    query = 'SELECT * FROM Chuyen_Xe'
+    if diemDi:
+        query += f' WHERE diemDi = "{diemDi}"'
+    if diemDen:
+        query += f' WHERE diemDen = "{diemDen}"'
     cursor.execute(query)
     data = cursor.fetchall()
-    if diemDi != None:
-        data = [p for p in data if str(p[0]) == str(diemDi)]
-    if diemDen != None:
-        data = [p for p in data if str(p[1]) == str(diemDen)]
     conn.close()
     return data
 
