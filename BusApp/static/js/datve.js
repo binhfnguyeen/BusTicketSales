@@ -68,6 +68,47 @@ function getValueButton(button) {
     localStorage.setItem('selectedSeat', seatValue);
 }
 
+function thanhToanDonHang() {
+    let i=3;
+    const idKhachHang = 1;
+    const idXe = document.getElementById('xeDi').textContent;
+    const ngayDat = new Date().toISOString().slice(0, 10);
+    const gia = (document.getElementById('giaVe').textContent);
+    const trangThai = "Đã xác nhận";
+    const idLichTrinh = 1;
+    const soGhe = 1;
+
+    // Tạo đối tượng dữ liệu để gửi đến server
+    const data = {
+        idKhachHang: idKhachHang,
+        idXe: idXe,
+        ngayDat: ngayDat,
+        gia: gia,
+        trangThai: trangThai,
+        idLichTrinh: idLichTrinh,
+        soGhe: soGhe
+    };
+
+    // Gửi yêu cầu POST tới server để lưu thông tin
+    fetch('/save_order', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (!result.success) {
+            alert('Có lỗi xảy ra: ' + result.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Lỗi kết nối đến server.');
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     let TTdiemDi = localStorage.getItem('diemDi');
     let TTdiemDen = localStorage.getItem('diemDen');

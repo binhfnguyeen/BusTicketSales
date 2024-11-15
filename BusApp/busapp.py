@@ -9,7 +9,6 @@ import sqlite3
 import os
 import json
 import dao
-
 from BusApp import app
 import smtplib
 from email.mime.text import MIMEText
