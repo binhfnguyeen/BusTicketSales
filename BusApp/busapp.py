@@ -53,14 +53,15 @@ def add_vehicle():
         bienSo = request.form['bienSo']
         sucChua = request.form['sucChua']
         tinhTrangXe = request.form['tinhTrangXe']
+        idTaiXe = request.form['idTaiXe']
 
         # Kết nối và thêm dữ liệu vào database
         connection = sqlite3.connect('./data/database.db')
         cursor = connection.cursor()
         cursor.execute("""
-            INSERT INTO Xe (bienSo, sucChua, tinhTrangXe) 
-            VALUES (?, ?, ?)
-        """, (bienSo, sucChua, tinhTrangXe))
+            INSERT INTO Xe (bienSo, sucChua, tinhTrangXe, idTaiXe) 
+            VALUES (?, ?, ?, ?)
+        """, (bienSo, sucChua, tinhTrangXe, idTaiXe))
         connection.commit()
         connection.close()
 
@@ -68,7 +69,41 @@ def add_vehicle():
         return redirect('/HomeAdmin')
 
     # Nếu là GET, hiển thị trang thêm khách hàng
-    return render_template('them_Xe.html')
+    drivers = dao.load_taiXe()
+    return render_template('them_Xe.html', drivers=drivers)
+
+@app.route('/xoa_Xe/<int:idXe>', methods=['DELETE'])
+def delete_vehicle(idXe):
+    try:
+        # Giả sử bạn có một hàm để kết nối và xóa dữ liệu từ database
+        dao.delete_vehicle_from_db(idXe)  # X óa nhan vien theo ID
+        return jsonify({"success": True}), 200
+    except Exception as e:
+        print(e)
+        return jsonify({"success": False}), 500
+
+@app.route('/chinhSua_Xe/<int:id>')
+def edit_vehicle(id):
+    conn = dao.get_db_connection()
+    vehicle = conn.execute('SELECT * FROM Xe WHERE idXe = ?', (id,)).fetchone()
+    conn.close()
+    if vehicle:
+        return render_template('capNhat_Xe.html', vehicle=vehicle)
+    return "Customer not found", 404
+
+# Route để cập nhật thông tin khách hàng
+@app.route('/capNhat_Xe/<int:id>', methods=['POST'])
+def update_vehicle(id):
+    bienSo = request.form['bienSo']
+    sucChua = request.form['sucChua']
+    tinhTrangXe = request.form['tinhTrangXe']
+
+    conn = dao.get_db_connection()
+    conn.execute('''UPDATE Xe SET bienSo = ?, sucChua = ?, tinhTrangXe = ? WHERE idXe = ?''',
+                     (bienSo, sucChua, tinhTrangXe, id))
+    conn.commit()
+    conn.close()
+    return redirect(url_for('home_admin'))  # Chuyển hướng về trang chủ sau khi cập nhật thành công
 
 @app.route('/ThemTuyenXe', methods=['GET', 'POST'])
 def add_route():
@@ -101,10 +136,7 @@ def add_route():
 def home_admin():
     return render_template("homeAd_new.html")
 
-def get_db_connection():
-    conn = sqlite3.connect('./data/database.db')
-    conn.row_factory = sqlite3.Row
-    return conn
+
 
 
 @app.route('/UserAdmin/NhanVien')
@@ -147,7 +179,7 @@ def add_employee():
 def delete_employee(employee_id):
     try:
         # Giả sử bạn có một hàm để kết nối và xóa dữ liệu từ database
-        dao.delete_customer_from_db(employee_id)  # X óa nhan vien theo ID
+        dao.delete_employee_from_db(employee_id)  # Xóa nhan vien theo ID
         return jsonify({"success": True}), 200
     except Exception as e:
         print(e)
@@ -155,7 +187,7 @@ def delete_employee(employee_id):
 
 @app.route('/chinhSua_NV/<int:id>')
 def edit_employee(id):
-    conn = get_db_connection()
+    conn = dao.get_db_connection()
     employee = conn.execute('SELECT * FROM NhanVien WHERE idNhanVien = ?', (id,)).fetchone()
     conn.close()
     if employee:
@@ -174,7 +206,7 @@ def update_employee(id):
     nganHang = request.form['nganHang']
     soTaiKhoan = request.form['soTaiKhoan']
 
-    conn = get_db_connection()
+    conn = dao.get_db_connection()
     conn.execute('''UPDATE NhanVien SET hoNV = ?, tenNV = ?, soDienThoai = ?, gioiTinh = ?, 
                     email = ?, ngaySinh = ?, nganHang = ?, soTaiKhoan = ? WHERE idNhanVien = ?''',
                  (hoNV, tenNV, soDienThoai, gioiTinh, email, ngaySinh, nganHang, soTaiKhoan, id))
@@ -232,7 +264,7 @@ def delete_customer(customer_id):
 # Route để hiển thị trang chỉnh sửa
 @app.route('/chinhSua_KH/<int:id>')
 def edit_customer(id):
-    conn = get_db_connection()
+    conn = dao.get_db_connection()
     customer = conn.execute('SELECT * FROM KhachHang WHERE idKhachHang = ?', (id,)).fetchone()
     conn.close()
     if customer:
@@ -251,7 +283,7 @@ def update_customer(id):
     nganHang = request.form['nganHang']
     soTaiKhoan = request.form['soTaiKhoan']
 
-    conn = get_db_connection()
+    conn = dao.get_db_connection()
     conn.execute('''UPDATE KhachHang SET hoKhach = ?, tenKhach = ?, soDienThoai = ?, gioiTinh = ?, 
                     email = ?, ngaySinh = ?, nganHang = ?, soTaiKhoan = ? WHERE idKhachHang = ?''',
                  (hoKhach, tenKhach, soDienThoai, gioiTinh, email, ngaySinh, nganHang, soTaiKhoan, id))

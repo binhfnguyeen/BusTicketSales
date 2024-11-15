@@ -3,9 +3,11 @@ import os
 import json
 import hashlib
 from BusApp import main
-from BusApp.models import KhachHang, NhanVien, TuyenXe, Xe
+from BusApp.models import KhachHang, NhanVien, TuyenXe, Xe, BenXe
 import BusApp
 import sqlite3
+from BusApp import db
+from sqlalchemy.orm import aliased
 
 def read_user():
     try:
@@ -75,9 +77,58 @@ def load_Xe():
 def total_Xe():
     return Xe.query.count()
 
+def load_taiXe():
+    conn = sqlite3.connect('data/database.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT idNhanVien, hoNV || ' ' || tenNV AS hoTen FROM NhanVien")
+    drivers = cursor.fetchall()  # Lấy dữ liệu trước khi đóng kết nối
+    conn.close()
+    return drivers
+
 def delete_customer_from_db(customer_id):
-    connection = sqlite3.connect('D:/BusTicketSales/BusApp/data/database.db')
+    connection = sqlite3.connect('D:/PycharmProject/BusTicketSales/BusApp/data/database.db')
     cursor = connection.cursor()
     cursor.execute("DELETE FROM KhachHang WHERE idKhachHang = ?", (customer_id,))
     connection.commit()
     connection.close()
+
+def delete_employee_from_db(employee_id):
+    connection = sqlite3.connect('D:/PycharmProject/BusTicketSales/BusApp/data/database.db')
+    cursor = connection.cursor()
+    cursor.execute("DELETE FROM NhanVien WHERE idNhanVien = ?", (employee_id,))
+    connection.commit()
+    connection.close()
+
+def delete_vehicle_from_db(vehicle_id):
+    connection = sqlite3.connect('D:/PycharmProject/BusTicketSales/BusApp/data/database.db')
+    cursor = connection.cursor()
+    cursor.execute("DELETE FROM Xe WHERE idXe = ?", (vehicle_id,))
+    connection.commit()
+    connection.close()
+
+def get_db_connection():
+    conn = sqlite3.connect('./data/database.db')
+    conn.row_factory = sqlite3.Row
+    return conn
+
+def tuyenXe_load():
+    # Khai báo alias cho bảng BenXe
+    ben_xe_diem_di = aliased(BenXe)
+    ben_xe_diem_den = aliased(BenXe)
+
+    # Lấy số trang từ query string
+    page = request.args.get('page', 1, type=int)
+
+    # Thực hiện truy vấn với join và phân trang
+    tuyen_xe = db.session.query(
+        TuyenXe,
+        ben_xe_diem_di.ten_ben_xe.label('diem_di_name'),
+        ben_xe_diem_den.ten_ben_xe.label('diem_den_name')
+    ) \
+        .join(ben_xe_diem_di, TuyenXe.diemDi == ben_xe_diem_di.tinh_code) \
+        .join(ben_xe_diem_den, TuyenXe.diemDen == ben_xe_diem_den.tinh_code) \
+        .paginate(page=page, per_page=6)
+
+    print(f"Tuyen Xe: {tuyen_xe.items}")  # In ra các mục đã phân trang
+
+    return tuyen_xe

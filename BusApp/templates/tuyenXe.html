@@ -141,12 +141,12 @@
                 </thead>
 
                 <tbody id="customer-table-body">
-                {% for c in tuyenXe %}
+                {% for c in tuyenXe.items %}
                     <tr>
                         <td>{{ c.idTuyenDuong }}</td>
-                        <td>{{ c.diemDi }}</td>
-                        <td>{{ c.diemDi }}</td>
-                        <td>{{ c.diemDi }}</td>
+                        <td>{{ c.diemDi }} - {{ c.diemDen }}</td>
+                        <td>{{ c.soNgayChayTrongTuan }}</td>
+                        <td>{{ c.soChuyenTrongTuan }}</td>
                         <td>{{ c.diemDi }}</td>
                         <td>{{ c.diemDen }}</td>
                         <td>{{ c.khoangCach }}</td>

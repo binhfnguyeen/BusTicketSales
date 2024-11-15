@@ -15,8 +15,8 @@
 
 <div class="container-fluid">
     <div class="row">
-        <button class="navbar-toggler d-md-none" type="button" data-toggle="collapse" data-target="#sidebarMenu" >
-              <img src="{{ url_for('static', filename='data/hamburger_menu_icon.jpeg') }}" alt="Logo" width="50">
+        <button class="navbar-toggler d-md-none" type="button" data-toggle="collapse" data-target="#sidebarMenu">
+            <img src="{{ url_for('static', filename='data/hamburger_menu_icon.jpeg') }}" alt="Logo" width="50">
         </button>
         <!-- Sidebar -->
         <nav class="col-md-2 bg-light sidebar collapse d-md-block" id="sidebarMenu">
@@ -32,7 +32,8 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse" data-target="#userSubmenu">
+                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse"
+                           data-target="#userSubmenu">
                             <i class="fa-solid fa-user"></i>
                             <p class="mb-0 ms-2 p-2">Người Dùng</p>
                             <i class="fa-solid fa-caret-down"></i>
@@ -48,7 +49,8 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse" data-target="#tuyenXeSubmenu">
+                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse"
+                           data-target="#tuyenXeSubmenu">
                             <i class="fa-solid fa-map-pin"></i>
                             <p class="mb-0 ms-2 p-2">Quản Lý Tuyến Xe</p>
                             <i class="fa-solid fa-caret-down"></i>
@@ -63,7 +65,8 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse" data-target="#chuyenXeSubmenu">
+                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse"
+                           data-target="#chuyenXeSubmenu">
                             <i class="fa-solid fa-map"></i>
                             <p class="mb-0 ms-2 p-2">Quản Lý Chuyến Xe</p>
                             <i class="fa-solid fa-caret-down"></i>
@@ -78,7 +81,8 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse" data-target="#xeSubmenu">
+                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse"
+                           data-target="#xeSubmenu">
                             <i class="fa-solid fa-bus"></i>
                             <p class="mb-0 ms-2 p-2">Quản Lý Xe</p>
                             <i class="fa-solid fa-caret-down"></i>
@@ -122,22 +126,30 @@
 
             <div class="container">
                 <h2 class="my-4">Thêm xe</h2>
-                <form>
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="form-group">
-                                <label for="bienSO">Biển số</label>
-                                <input type="text" class="form-control" id="bienSo">
-                            </div>
-                            <div class="form-group">
-                                <label for="sucChua">Sức chứa</label>
-                                <input type="text" class="form-control" id="sucChua">
-                            </div>
-                            <div class="form-group">
-                                <label for="currentPrice">Giá Hiện Hành</label>
-                                <input type="text" class="form-control" id="currentPrice">
-                            </div>
-                        </div>
+                <form action="/ThemXe" method="POST">
+                    <div class="form-group">
+                        <label for="bienSo">Biển số</label>
+                        <input type="text" class="form-control" id="bienSo" name="bienSo" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="sucChua">Sức chứa</label>
+                        <input type="text" class="form-control" id="sucChua" name="sucChua" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tinhTrangXe">Tình trạng xe</label>
+                        <select class="form-control" id="tinhTrangXe" name="tinhTrangXe" required>
+                            <option value="Đang hoạt động">Hoạt động</option>
+                            <option value="Bảo trì">Bảo trì</option>
+                            <option value="Dừng hoạt động">Dừng hoạt động</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="idTaiXe">Tài xế</label>
+                        <select class="form-control" id="idTaiXe" name="idTaiXe" required>
+                            {% for driver in drivers %}
+                                <option value="{{ driver[0] }}">{{ driver[1] }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <button type="submit" class="btn btn-success mt-3">Thêm xe</button>
                 </form>
