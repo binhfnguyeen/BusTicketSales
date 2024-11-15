@@ -1,4 +1,3 @@
-from enum import verify
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 import io
@@ -47,10 +46,65 @@ def xe_admin():
     total = dao.total_Xe()
     return render_template("xe.html", Xe=x, sum=total)
 
+@app.route('/ThemXe', methods=['GET', 'POST'])
+def add_vehicle():
+    if request.method == 'POST':
+        # Xử lý dữ liệu từ form
+        bienSo = request.form['bienSo']
+        sucChua = request.form['sucChua']
+        tinhTrangXe = request.form['tinhTrangXe']
+
+        # Kết nối và thêm dữ liệu vào database
+        connection = sqlite3.connect('./data/database.db')
+        cursor = connection.cursor()
+        cursor.execute("""
+            INSERT INTO Xe (bienSo, sucChua, tinhTrangXe) 
+            VALUES (?, ?, ?)
+        """, (bienSo, sucChua, tinhTrangXe))
+        connection.commit()
+        connection.close()
+
+        # Chuyển hướng về trang chính sau khi thêm thành công
+        return redirect('/HomeAdmin')
+
+    # Nếu là GET, hiển thị trang thêm khách hàng
+    return render_template('them_Xe.html')
+
+@app.route('/ThemTuyenXe', methods=['GET', 'POST'])
+def add_route():
+    if request.method == 'POST':
+        # Xử lý dữ liệu từ form
+        diemDi = request.form['diemDi']
+        diemDen = request.form['diemDen']
+        soNgayChay = request.form['soNgayChay']
+        thoiGianDiChuyen = request.form['thoiGianDiChuyen']
+        giaTien = request.form['giaTien']
+        quangDuong = request.form['quangDuong']
+
+        # Kết nối và thêm dữ liệu vào database
+        connection = sqlite3.connect('./data/database.db')
+        cursor = connection.cursor()
+        cursor.execute("""
+            INSERT INTO TuyenDuong (diemDi, diemDen, soNgayChay, thoiGianDiChuyen, giaTien, quangDuong) 
+            VALUES (?, ?, ?, ?, ?, ?)
+        """, (diemDi, diemDen, soNgayChay, thoiGianDiChuyen, giaTien, quangDuong))
+        connection.commit()
+        connection.close()
+
+        # Chuyển hướng về trang chính sau khi thêm thành công
+        return redirect('/HomeAdmin')
+
+    # Nếu là GET, hiển thị trang thêm khách hàng
+    return render_template('them_tuyenXe.html')
 
 @app.route('/HomeAdmin')
 def home_admin():
     return render_template("homeAd_new.html")
+
+def get_db_connection():
+    conn = sqlite3.connect('./data/database.db')
+    conn.row_factory = sqlite3.Row
+    return conn
 
 
 @app.route('/UserAdmin/NhanVien')
@@ -174,10 +228,6 @@ def delete_customer(customer_id):
         print(e)
         return jsonify({"success": False}), 500
 
-def get_db_connection():
-    conn = sqlite3.connect('./data/database.db')
-    conn.row_factory = sqlite3.Row
-    return conn
 
 # Route để hiển thị trang chỉnh sửa
 @app.route('/chinhSua_KH/<int:id>')
