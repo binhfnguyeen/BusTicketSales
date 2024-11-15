@@ -130,17 +130,23 @@
                 <thead class="thead-light">
                     <tr>
                         <th>ID</th>
-                        <th>Điểm Đi</th>
-                        <th>Điểm Đến</th>
-                        <th>Khoảng Cách</th>
+                        <th>Tên Tuyến Xe</th>
+                        <th>Số ngày chạy trong tuần</th>
+                        <th>Số chuyến trong ngày</th>
+                        <th>Thời gian</th>
+                        <th>Giá tiền</th>
+                        <th>Khoảng cách</th>
                         <th>Hành Động</th>
                     </tr>
                 </thead>
 
                 <tbody id="customer-table-body">
-                {% for c in tuyenXe %}
+                {% for c in tuyenXe.items %}
                     <tr>
                         <td>{{ c.idTuyenDuong }}</td>
+                        <td>{{ c.diemDi }} - {{ c.diemDen }}</td>
+                        <td>{{ c.soNgayChayTrongTuan }}</td>
+                        <td>{{ c.soChuyenTrongTuan }}</td>
                         <td>{{ c.diemDi }}</td>
                         <td>{{ c.diemDen }}</td>
                         <td>{{ c.khoangCach }}</td>

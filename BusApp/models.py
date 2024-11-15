@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Date, ForeignKey, REAL
+from sqlalchemy import Column, Integer, String, Date, ForeignKey, REAL, CheckConstraint
 from sqlalchemy.orm import relationship
 from BusApp import db, app
 from datetime import datetime
@@ -33,6 +33,19 @@ class TuyenXe(db.Model):
      diemDi = Column(String(50), nullable=False)
      diemDen = Column(String(20), nullable=False)
      khoangCach = Column(REAL, nullable=False)
+     soNgayTrongTuanChay = Column(Integer, nullable=True)
+     soChuyenTrongTuan = Column(Integer, nullable=True)
+     gia = Column(Integer, nullable=True)
+     __table_args__ = (
+         CheckConstraint('soNgayTrongTuanChay BETWEEN 1 AND 7', name='check_soNgayTrongTuanChay'),
+     )
+
+class BenXe(db.Model):
+    __tablename__ = 'Ben_Xe'
+    ben_xe_id = Column(Integer, primary_key=True, autoincrement=True)
+    ten_ben_xe = Column(String(50), nullable=False)
+    tinh_code = Column(String(50), nullable=False)
+    quan_huyen_code = Column(String(50), nullable=False)
 
 class Xe(db.Model):
     __tablename__ = 'Xe'
