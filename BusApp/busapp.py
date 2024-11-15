@@ -35,10 +35,78 @@ def trang_chu():
 
 @app.route('/TuyenXe')
 def tuyenXe_admin():
-    tx = dao.load_tuyenXe()
+    tx = dao.tuyenXe_load()
     total = dao.total_tuyenXe()
     return render_template("tuyenXe.html", tuyenXe=tx, sum=total)
 
+@app.route('/ThemTuyenXe', methods=['GET', 'POST'])
+def add_route():
+    if request.method == 'POST':
+        # Xử lý dữ liệu từ form
+        diemDi = request.form['diemDi']
+        diemDen = request.form['diemDen']
+        khoangCach = request.form['khoangCach']
+        soNgayTrongTuanChay = request.form['soNgayTrongTuanChay']
+        soChuyenTrongTuan = request.form['soChuyenTrongTuan']
+        gia = request.form['gia']
+
+        # Kết nối và thêm dữ liệu vào database
+        connection = sqlite3.connect('./data/database.db')
+        cursor = connection.cursor()
+        cursor.execute("""
+            INSERT INTO TuyenDuong (diemDi, diemDen, khoangCach, soNgayTrongTuanChay, soChuyenTrongTuan, gia) 
+            VALUES (?, ?, ?, ?, ?, ?)
+        """, (diemDi, diemDen, khoangCach, soNgayTrongTuanChay, soChuyenTrongTuan, gia))
+        connection.commit()
+        connection.close()
+
+        # Chuyển hướng về trang chính sau khi thêm thành công
+        return redirect('/HomeAdmin')
+
+    # Nếu là GET, hiển thị trang thêm khách hàng
+    stations = dao.load_benXe()
+    return render_template('them_tuyenXe.html', stations=stations)
+
+@app.route('/xoa_TuyenXe/<int:idTuyenXe>', methods=['DELETE'])
+def delete_route(idTuyenXe):
+    try:
+        # Giả sử bạn có một hàm để kết nối và xóa dữ liệu từ database
+        dao.delete_route_from_db(idTuyenXe)  # X óa nhan vien theo ID
+        return jsonify({"success": True}), 200
+    except Exception as e:
+        print(e)
+        return jsonify({"success": False}), 500
+
+@app.route('/chinhSua_TuyenXe/<int:id>')
+def edit_route(id):
+    conn = dao.get_db_connection()
+    route = conn.execute('SELECT * FROM TuyenDuong WHERE idTuyenDuong = ?', (id,)).fetchone()
+    conn.close()
+    stations = dao.load_benXe()
+    if route:
+        return render_template('capNhat_TuyenXe.html', route=route, stations=stations)
+    return "Không tìm thấy tuyến đương", 404
+
+# Route để cập nhật thông tin khách hàng
+@app.route('/capNhat_TuyenXe/<int:id>', methods=['GET', 'POST'])
+def update_route(id):
+    if request.method == 'POST':
+        diemDi = request.form['diemDi']
+        diemDen = request.form['diemDen']
+        khoangCach = request.form['khoangCach']
+        soNgayTrongTuanChay = request.form['soNgayTrongTuanChay']
+        soChuyenTrongTuan = request.form['soChuyenTrongTuan']
+        gia = request.form['gia']
+
+        conn = dao.get_db_connection()
+        conn.execute('''UPDATE TuyenDuong SET diemDi = ?, diemDen = ?, khoangCach = ?, soNgayTrongTuanChay = ?, soChuyenTrongTuan = ?
+            , gia = ? WHERE idTuyenDuong = ?''',
+                     (diemDi, diemDen, khoangCach, soNgayTrongTuanChay, soChuyenTrongTuan, gia, id))
+        conn.commit()
+        conn.close()
+        return redirect(url_for('home_admin'))  # Chuyển hướng về trang chủ sau khi cập nhật thành công
+
+    return render_template('capNhat_TuyenXe.html')
 
 @app.route('/Xe')
 def xe_admin():
@@ -89,7 +157,7 @@ def edit_vehicle(id):
     conn.close()
     if vehicle:
         return render_template('capNhat_Xe.html', vehicle=vehicle)
-    return "Customer not found", 404
+    return "Khong tìm thấy xe", 404
 
 # Route để cập nhật thông tin khách hàng
 @app.route('/capNhat_Xe/<int:id>', methods=['POST'])
@@ -105,38 +173,10 @@ def update_vehicle(id):
     conn.close()
     return redirect(url_for('home_admin'))  # Chuyển hướng về trang chủ sau khi cập nhật thành công
 
-@app.route('/ThemTuyenXe', methods=['GET', 'POST'])
-def add_route():
-    if request.method == 'POST':
-        # Xử lý dữ liệu từ form
-        diemDi = request.form['diemDi']
-        diemDen = request.form['diemDen']
-        soNgayChay = request.form['soNgayChay']
-        thoiGianDiChuyen = request.form['thoiGianDiChuyen']
-        giaTien = request.form['giaTien']
-        quangDuong = request.form['quangDuong']
-
-        # Kết nối và thêm dữ liệu vào database
-        connection = sqlite3.connect('./data/database.db')
-        cursor = connection.cursor()
-        cursor.execute("""
-            INSERT INTO TuyenDuong (diemDi, diemDen, soNgayChay, thoiGianDiChuyen, giaTien, quangDuong) 
-            VALUES (?, ?, ?, ?, ?, ?)
-        """, (diemDi, diemDen, soNgayChay, thoiGianDiChuyen, giaTien, quangDuong))
-        connection.commit()
-        connection.close()
-
-        # Chuyển hướng về trang chính sau khi thêm thành công
-        return redirect('/HomeAdmin')
-
-    # Nếu là GET, hiển thị trang thêm khách hàng
-    return render_template('them_tuyenXe.html')
 
 @app.route('/HomeAdmin')
 def home_admin():
     return render_template("homeAd_new.html")
-
-
 
 
 @app.route('/UserAdmin/NhanVien')
@@ -192,7 +232,7 @@ def edit_employee(id):
     conn.close()
     if employee:
         return render_template('capNhat_NV.html', employee=employee)
-    return "Customer not found", 404
+    return "Không tìm thấy nhân viên", 404
 
 # Route để cập nhật thông tin khách hàng
 @app.route('/capNhat_NV/<int:id>', methods=['POST'])
@@ -269,7 +309,7 @@ def edit_customer(id):
     conn.close()
     if customer:
         return render_template('capNhat_KH.html', customer=customer)
-    return "Customer not found", 404
+    return "Không tìm thấy khách hàng", 404
 
 # Route để cập nhật thông tin khách hàng
 @app.route('/capNhat_KH/<int:id>', methods=['POST'])

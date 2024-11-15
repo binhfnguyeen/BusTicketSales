@@ -8,6 +8,20 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebarAdmin.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const diemDi = document.getElementById('diemDi');
+        const diemDen = document.getElementById('diemDen');
+        const form = document.querySelector('form');
+
+        form.addEventListener('submit', function (event) {
+            if (diemDi.value === diemDen.value) {
+                alert('Bến xe điểm đi và bến xe điểm đến không được trùng nhau!');
+                event.preventDefault(); // Ngăn chặn việc submit form
+            }
+        });
+    });
+</script>
 
 
 </head>
@@ -32,7 +46,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse" data-target="#userSubmenu">
+                        <a class="nav-link collapsed d-flex align-items-center" href="/UserAdmin" data-toggle="collapse" data-target="#userSubmenu">
                             <i class="fa-solid fa-user"></i>
                             <p class="mb-0 ms-2 p-2">Người Dùng</p>
                             <i class="fa-solid fa-caret-down"></i>
@@ -58,7 +72,7 @@
                                 <a class="nav-link" href="/TuyenXe">Danh Sách Tuyến Xe</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Thêm Tuyến Xe</a>
+                                <a class="nav-link" href="/ThemTuyenXe">Thêm Tuyến Xe</a>
                             </li>
                         </ul>
                     </li>
@@ -88,7 +102,7 @@
                                 <a class="nav-link" href="/Xe">Danh Sách Xe</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Thêm Xe</a>
+                                <a class="nav-link" href="/ThemXe">Thêm Xe</a>
                             </li>
                         </ul>
                     </li>
@@ -112,7 +126,7 @@
         <main class="col-md-10 ml-sm-auto px-4">
             <!-- Header -->
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h2>Người Dùng / Khách hàng</h2>
+                <h2>Tuyến Xe / Thêm Tuyến Xe</h2>
                 <div class="text-right">
                     <span>Xin chào, Admin</span>
                     <img src="{{ url_for('static', filename='data/avatar.png') }}" alt="Avatar" class="rounded-circle"
@@ -122,47 +136,54 @@
 
             <div class="container">
                 <h2 class="my-4">Thêm tuyến xe</h2>
-                <form>
+                <form action="/ThemTuyenXe" method="POST">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="departureStation">Mã bến xe đi</label>
-                                <select class="form-control" id="departureStation">
-                                    <option>Chọn MABX</option>
+                                <label for="diemDi">Mã bến xe đi</label>
+                                <select class="form-control" id="diemDi" name="diemDi" required>
+                                    <option value="">Chọn Mã Bến Xe Đi</option>
+                                    {% for station in stations %}
+                                        <option value="{{ station[0] }}">{{ station[1] }}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="weeklyDays">Số ngày trong tuần chạy</label>
-                                <input type="text" class="form-control" id="weeklyDays">
+                                <label for="gia">Giá Hiện Hành</label>
+                                <input type="text" class="form-control" id="gia" name="gia" required>
                             </div>
                             <div class="form-group">
-                                <label for="travelTime">Thời gian di chuyển</label>
-                                <input type="text" class="form-control" id="travelTime">
-                            </div>
-                            <div class="form-group">
-                                <label for="currentPrice">Giá Hiện Hành</label>
-                                <input type="text" class="form-control" id="currentPrice">
+                                <label for="khoangCach">Quãng đường</label>
+                                <input type="text" class="form-control" id="khoangCach" name="khoangCach" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="routeName">Tên tuyến</label>
-                                <input type="text" class="form-control" id="routeName">
-                            </div>
-                            <div class="form-group">
-                                <label for="arrivalStation">Mã bến xe đến</label>
-                                <select class="form-control" id="arrivalStation">
-                                    <option>Chọn BENDEN_MABX</option>
+                                <label for="diemDen">Mã bến xe đến</label>
+                                <select class="form-control" id="diemDen" name="diemDen" required>
+                                    <option value="">Chọn Mã Bến Xe Đi</option>
+                                    {% for station in stations %}
+                                        <option value="{{ station[0] }}">{{ station[1] }}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="dailyTrips">Số chuyến trong ngày</label>
-                                <input type="text" class="form-control" id="dailyTrips">
+                                <label for="soNgayTrongTuanChay">Số ngày trong tuần chạy</label>
+                                <select class="form-control" id="soNgayTrongTuanChay" name="soNgayTrongTuanChay" required>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                </select>
                             </div>
                             <div class="form-group">
-                                <label for="distance">Quãng đường</label>
-                                <input type="text" class="form-control" id="distance">
+                                <label for="soChuyenTrongTuan">Số chuyến trong ngày</label>
+                                <input type="text" class="form-control" id="soChuyenTrongTuan" name="soChuyenTrongTuan" required>
                             </div>
+
                         </div>
                     </div>
                     <button type="submit" class="btn btn-success mt-3">Thêm tuyến xe</button>

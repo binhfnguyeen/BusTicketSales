@@ -3,7 +3,7 @@ import os
 import json
 import hashlib
 from BusApp import main
-from BusApp.models import KhachHang, NhanVien, TuyenXe, Xe, BenXe
+from BusApp.models import KhachHang, NhanVien, TuyenXe, Xe, Ben_Xe, Tinh
 import BusApp
 import sqlite3
 from BusApp import db
@@ -85,6 +85,18 @@ def load_taiXe():
     conn.close()
     return drivers
 
+def load_benXe():
+    connection = sqlite3.connect('data/database.db')
+    cursor = connection.cursor()
+
+    # Truy vấn tất cả các bến xe
+    cursor.execute("SELECT ben_xe_id, ten_ben_xe FROM Ben_Xe")
+    stations = cursor.fetchall()
+
+    connection.close()
+    return stations
+
+
 def delete_customer_from_db(customer_id):
     connection = sqlite3.connect('D:/PycharmProject/BusTicketSales/BusApp/data/database.db')
     cursor = connection.cursor()
@@ -106,29 +118,42 @@ def delete_vehicle_from_db(vehicle_id):
     connection.commit()
     connection.close()
 
+def delete_route_from_db(route_id):
+    connection = sqlite3.connect('D:/PycharmProject/BusTicketSales/BusApp/data/database.db')
+    cursor = connection.cursor()
+    cursor.execute("DELETE FROM TuyenDuong WHERE idTuyenDuong = ?", (route_id,))
+    connection.commit()
+    connection.close()
+
 def get_db_connection():
     conn = sqlite3.connect('./data/database.db')
     conn.row_factory = sqlite3.Row
     return conn
 
 def tuyenXe_load():
-    # Khai báo alias cho bảng BenXe
-    ben_xe_diem_di = aliased(BenXe)
-    ben_xe_diem_den = aliased(BenXe)
+    # Khai báo alias cho bảng Ben_Xe và Tinh
+    ben_xe_diem_di = aliased(Ben_Xe)
+    ben_xe_diem_den = aliased(Ben_Xe)
+    tinh_diem_di = aliased(Tinh)  # Alias cho bảng Tinh (điểm đi)
+    tinh_diem_den = aliased(Tinh)  # Alias cho bảng Tinh (điểm đến)
 
     # Lấy số trang từ query string
     page = request.args.get('page', 1, type=int)
 
     # Thực hiện truy vấn với join và phân trang
-    tuyen_xe = db.session.query(
+    tuyen_xe = ((db.session.query(
         TuyenXe,
         ben_xe_diem_di.ten_ben_xe.label('diem_di_name'),
-        ben_xe_diem_den.ten_ben_xe.label('diem_den_name')
+        ben_xe_diem_den.ten_ben_xe.label('diem_den_name'),
+        tinh_diem_di.name.label('diem_di_tinh_name'),  # Lấy tên tỉnh điểm đi
+        tinh_diem_den.name.label('diem_den_tinh_name'),  # Lấy tên tỉnh điểm đến
+        ben_xe_diem_di.tinh_code.label('diem_di_tinh_code'),
+        ben_xe_diem_den.tinh_code.label('diem_den_tinh_code')
     ) \
-        .join(ben_xe_diem_di, TuyenXe.diemDi == ben_xe_diem_di.tinh_code) \
-        .join(ben_xe_diem_den, TuyenXe.diemDen == ben_xe_diem_den.tinh_code) \
-        .paginate(page=page, per_page=6)
-
-    print(f"Tuyen Xe: {tuyen_xe.items}")  # In ra các mục đã phân trang
+    .join(ben_xe_diem_di, TuyenXe.diemDi == ben_xe_diem_di.ben_xe_id) \
+    .join(ben_xe_diem_den, TuyenXe.diemDen == ben_xe_diem_den.ben_xe_id) \
+    .join(tinh_diem_di, ben_xe_diem_di.tinh_code == tinh_diem_di.code)
+                .join(tinh_diem_den, ben_xe_diem_den.tinh_code == tinh_diem_den.code))
+                .paginate(page=page, per_page=6))
 
     return tuyen_xe

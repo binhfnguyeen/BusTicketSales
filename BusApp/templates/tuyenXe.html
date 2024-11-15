@@ -15,8 +15,8 @@
 
 <div class="container-fluid">
     <div class="row">
-        <button class="navbar-toggler d-md-none" type="button" data-toggle="collapse" data-target="#sidebarMenu" >
-              <img src="{{ url_for('static', filename='data/hamburger_menu_icon.jpeg') }}" alt="Logo" width="50">
+        <button class="navbar-toggler d-md-none" type="button" data-toggle="collapse" data-target="#sidebarMenu">
+            <img src="{{ url_for('static', filename='data/hamburger_menu_icon.jpeg') }}" alt="Logo" width="50">
         </button>
         <!-- Sidebar -->
         <nav class="col-md-2 bg-light sidebar collapse d-md-block" id="sidebarMenu">
@@ -32,7 +32,8 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse" data-target="#userSubmenu">
+                        <a class="nav-link collapsed d-flex align-items-center" href="/UserAdmin" data-toggle="collapse"
+                           data-target="#userSubmenu">
                             <i class="fa-solid fa-user"></i>
                             <p class="mb-0 ms-2 p-2">Người Dùng</p>
                             <i class="fa-solid fa-caret-down"></i>
@@ -48,7 +49,8 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse" data-target="#tuyenXeSubmenu">
+                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse"
+                           data-target="#tuyenXeSubmenu">
                             <i class="fa-solid fa-map-pin"></i>
                             <p class="mb-0 ms-2 p-2">Quản Lý Tuyến Xe</p>
                             <i class="fa-solid fa-caret-down"></i>
@@ -58,12 +60,13 @@
                                 <a class="nav-link" href="/TuyenXe">Danh Sách Tuyến Xe</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Thêm Tuyến Xe</a>
+                                <a class="nav-link" href="/ThemTuyenXe">Thêm Tuyến Xe</a>
                             </li>
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse" data-target="#chuyenXeSubmenu">
+                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse"
+                           data-target="#chuyenXeSubmenu">
                             <i class="fa-solid fa-map"></i>
                             <p class="mb-0 ms-2 p-2">Quản Lý Chuyến Xe</p>
                             <i class="fa-solid fa-caret-down"></i>
@@ -78,7 +81,8 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse" data-target="#xeSubmenu">
+                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse"
+                           data-target="#xeSubmenu">
                             <i class="fa-solid fa-bus"></i>
                             <p class="mb-0 ms-2 p-2">Quản Lý Xe</p>
                             <i class="fa-solid fa-caret-down"></i>
@@ -88,7 +92,7 @@
                                 <a class="nav-link" href="/Xe">Danh Sách Xe</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Thêm Xe</a>
+                                <a class="nav-link" href="/ThemXe">Thêm Xe</a>
                             </li>
                         </ul>
                     </li>
@@ -122,35 +126,42 @@
             <!-- Search and Add Button -->
             <div class="d-flex justify-content-between mb-3">
                 <input type="text" class="form-control w-25" placeholder="Search...">
-                <button class="btn btn-primary"><i class="fa fa-plus"></i> Thêm tuyến xe</button>
+                <a href="/ThemTuyenXe" class="btn btn-primary"><i class="fa fa-plus"></i> Thêm Tuyến Xe</a>
             </div>
 
             <!-- Employee Table -->
             <table class="table table-bordered">
                 <thead class="thead-light">
-                    <tr>
-                        <th>ID</th>
-                        <th>Tên Tuyến Xe</th>
-                        <th>Số ngày chạy trong tuần</th>
-                        <th>Số chuyến trong ngày</th>
-                        <th>Thời gian</th>
-                        <th>Giá tiền</th>
-                        <th>Khoảng cách</th>
-                        <th>Hành Động</th>
-                    </tr>
+                <tr>
+                    <th>ID</th>
+                    <th>Tên Tuyến Xe</th>
+                    <th>Số ngày chạy trong tuần</th>
+                    <th>Số chuyến trong ngày</th>
+                    <th>Điểm đi</th>
+                    <th>Điểm đến</th>
+                    <th>Giá</th>
+                    <th>Khoảng cách</th>
+                    <th>Hành Động</th>
+                </tr>
                 </thead>
 
                 <tbody id="customer-table-body">
                 {% for c in tuyenXe.items %}
                     <tr>
-                        <td>{{ c.idTuyenDuong }}</td>
-                        <td>{{ c.diemDi }} - {{ c.diemDen }}</td>
-                        <td>{{ c.soNgayChayTrongTuan }}</td>
-                        <td>{{ c.soChuyenTrongTuan }}</td>
-                        <td>{{ c.diemDi }}</td>
-                        <td>{{ c.diemDen }}</td>
-                        <td>{{ c.khoangCach }}</td>
-                        <td><button class="btn btn-danger"><i class="fa fa-trash"></i></button></td>
+                        <td>{{ c.TuyenXe.idTuyenDuong }}</td>
+                        <td>{{ c.diem_di_tinh_name }} - {{ c.diem_den_tinh_name }}</td>
+                        <td>{{ c.TuyenXe.soNgayTrongTuanChay }}</td>
+                        <td>{{ c.TuyenXe.soChuyenTrongTuan }}</td>
+                        <td>{{ c.diem_di_name }}</td> <!-- Hiển thị bến xe và tỉnh điểm đi -->
+                        <td>{{ c.diem_den_name }}</td> <!-- Hiển thị bến xe và tỉnh điểm đến -->
+                        <td>{{ c.TuyenXe.gia }}</td>
+                        <td>{{ c.TuyenXe.khoangCach }}</td>
+                        <td>
+                            <button class="btn btn-danger delete-btn" data-id="{{ c.TuyenXe.idTuyenDuong }}"><i
+                                    class="fa fa-trash"></i></button>
+                            <a href="{{ url_for('edit_route', id=c.TuyenXe.idTuyenDuong) }}" class="btn btn-primary"><i
+                                    class="fa fa-edit"></i></a>
+                        </td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -167,10 +178,12 @@
                 <ul class="pagination justify-content-center">
                     <li class="page-item">
                         {% if tuyenXe.has_prev %}
-                            <a class="page-link" href="{{ url_for('tuyenXe_admin', page=tuyenXe.prev_num) }}">Previous</a>
+                            <a class="page-link"
+                               href="{{ url_for('tuyenXe_admin', page=tuyenXe.prev_num) }}">Previous</a>
                         {% endif %}
                     </li>
-                    <li class="page-item active"><span class="page-link">Trang {{ tuyenXe.page }} trên {{ tuyenXe.pages }}</span></li>
+                    <li class="page-item active"><span
+                            class="page-link">Trang {{ tuyenXe.page }} trên {{ tuyenXe.pages }}</span></li>
                     <li class="page-item">
                         {% if tuyenXe.has_next %}
                             <a class="page-link" href="{{ url_for('tuyenXe_admin', page=tuyenXe.next_num) }}">Next</a>
@@ -187,7 +200,32 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const deleteButtons = document.querySelectorAll(".delete-btn");
 
+        deleteButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                const idTuyenDuong = this.getAttribute("data-id");
+
+                if (confirm("Bạn có chắc chắn muốn xóa xe này?")) {
+                    fetch(`/xoa_TuyenXe/${idTuyenDuong}`, {
+                        method: 'DELETE'
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                this.closest('tr').remove(); // Xóa hàng khỏi bảng nếu thành công
+                                alert("Đã xóa thành công!");
+                            } else {
+                                alert("Xóa không thành công. Vui lòng thử lại.");
+                            }
+                        })
+                        .catch(error => console.error("Error:", error));
+                }
+            });
+        });
+    });
+</script>
 
 
 </body>

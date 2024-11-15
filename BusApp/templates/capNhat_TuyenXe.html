@@ -8,6 +8,20 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebarAdmin.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const diemDi = document.getElementById('diemDi');
+        const diemDen = document.getElementById('diemDen');
+        const form = document.querySelector('form');
+
+        form.addEventListener('submit', function (event) {
+            if (diemDi.value === diemDen.value) {
+                alert('Bến xe điểm đi và bến xe điểm đến không được trùng nhau!');
+                event.preventDefault(); // Ngăn chặn việc submit form
+            }
+        });
+    });
+</script>
 
 
 </head>
@@ -15,8 +29,8 @@
 
 <div class="container-fluid">
     <div class="row">
-        <button class="navbar-toggler d-md-none" type="button" data-toggle="collapse" data-target="#sidebarMenu">
-            <img src="{{ url_for('static', filename='data/hamburger_menu_icon.jpeg') }}" alt="Logo" width="50">
+        <button class="navbar-toggler d-md-none" type="button" data-toggle="collapse" data-target="#sidebarMenu" >
+              <img src="{{ url_for('static', filename='data/hamburger_menu_icon.jpeg') }}" alt="Logo" width="50">
         </button>
         <!-- Sidebar -->
         <nav class="col-md-2 bg-light sidebar collapse d-md-block" id="sidebarMenu">
@@ -32,8 +46,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link collapsed d-flex align-items-center" href="/UserAdmin" data-toggle="collapse"
-                           data-target="#userSubmenu">
+                        <a class="nav-link collapsed d-flex align-items-center" href="/UserAdmin" data-toggle="collapse" data-target="#userSubmenu">
                             <i class="fa-solid fa-user"></i>
                             <p class="mb-0 ms-2 p-2">Người Dùng</p>
                             <i class="fa-solid fa-caret-down"></i>
@@ -49,8 +62,7 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse"
-                           data-target="#tuyenXeSubmenu">
+                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse" data-target="#tuyenXeSubmenu">
                             <i class="fa-solid fa-map-pin"></i>
                             <p class="mb-0 ms-2 p-2">Quản Lý Tuyến Xe</p>
                             <i class="fa-solid fa-caret-down"></i>
@@ -65,8 +77,7 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse"
-                           data-target="#chuyenXeSubmenu">
+                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse" data-target="#chuyenXeSubmenu">
                             <i class="fa-solid fa-map"></i>
                             <p class="mb-0 ms-2 p-2">Quản Lý Chuyến Xe</p>
                             <i class="fa-solid fa-caret-down"></i>
@@ -81,8 +92,7 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse"
-                           data-target="#xeSubmenu">
+                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse" data-target="#xeSubmenu">
                             <i class="fa-solid fa-bus"></i>
                             <p class="mb-0 ms-2 p-2">Quản Lý Xe</p>
                             <i class="fa-solid fa-caret-down"></i>
@@ -116,7 +126,7 @@
         <main class="col-md-10 ml-sm-auto px-4">
             <!-- Header -->
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h2>Cập nhật xe</h2>
+                <h2>Chỉnh sửa Tuyến Xe</h2>
                 <div class="text-right">
                     <span>Xin chào, Admin</span>
                     <img src="{{ url_for('static', filename='data/avatar.png') }}" alt="Avatar" class="rounded-circle"
@@ -125,25 +135,58 @@
             </div>
 
             <div class="container">
-                <h2 class="my-4">Cập nhật xe</h2>
-                <form action="/capNhat_Xe/{{ vehicle.idXe }}" method="POST">
-                    <div class="form-group">
-                        <label for="bienSo">Biển số</label>
-                        <input type="text" class="form-control" id="bienSo" name="bienSo" value="{{ vehicle.bienSo }}" required>
+                <h2 class="my-4">Thêm tuyến xe</h2>
+                <form action="/capNhat_TuyenXe/{{ route.idTuyenDuong }}" method="POST">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="diemDi">Mã bến xe đi</label>
+                                <select class="form-control" id="diemDi" name="diemDi" required>
+                                    <option value="">Chọn Mã Bến Xe Đi</option>
+                                    {% for station in stations %}
+                                        <option value="{{ station[0] }}" {% if route.diemDi == station[0] %} selected {% endif %}>
+                                            {{ station[1] }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="gia">Giá Hiện Hành</label>
+                                <input type="text" class="form-control" id="gia" name="gia" value="{{ route.gia }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="khoangCach">Quãng đường</label>
+                                <input type="text" class="form-control" id="khoangCach" name="khoangCach" value="{{ route.khoangCach }}" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="diemDen">Mã bến xe đến</label>
+                                <select class="form-control" id="diemDen" name="diemDen" required>
+                                    <option value="">Chọn Mã Bến Xe Đến</option>
+                                    {% for station in stations %}
+                                        <option value="{{ station[0] }}" {% if route['diemDen'] == station[0] %} selected {% endif %}>
+                                            {{ station[1] }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="soNgayTrongTuanChay">Số ngày trong tuần chạy</label>
+                                <select class="form-control" id="soNgayTrongTuanChay" name="soNgayTrongTuanChay" required>
+                                    {% for day in range(1, 8) %}
+                                        <option value="{{ day }}" {% if selected_day == day %} selected {% endif %}>{{ day }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="soChuyenTrongTuan">Số chuyến trong ngày</label>
+                                <input type="text" class="form-control" id="soChuyenTrongTuan" name="soChuyenTrongTuan" value="{{ route.soChuyenTrongTuan }}" required>
+                            </div>
+
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="sucChua">Sức chứa</label>
-                        <input type="text" class="form-control" id="sucChua" name="sucChua" value="{{ vehicle.sucChua }}" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="tinhTrangXe">Tình trạng xe</label>
-                        <select class="form-control" id="tinhTrangXe" name="tinhTrangXe" required>
-                            <option value="Hoạt động" {% if vehicle.tinhTrangXe == 'Hoạt động' %} selected {% endif %}>Hoạt động</option>
-                            <option value="Bảo trì" {% if vehicle.tinhTrangXe == 'Bảo trì' %} selected {% endif %}>Bảo trì</option>
-                            <option value="Dừng hoạt động" {% if vehicle.tinhTrangXe == 'Dừng hoạt động' %} selected {% endif %}>Dừng hoạt động</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-warning mt-3">Cập nhật xe</button>
+                    <button type="submit" class="btn btn-warning mt-3">Cập nhật tuyến xe</button>
                 </form>
             </div>
 
