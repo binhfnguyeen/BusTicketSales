@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Bus - Trang cá nhân</title>
+    <title>Thêm xe</title>
     <!-- Link Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebarAdmin.css') }}">
@@ -32,7 +32,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link collapsed d-flex align-items-center" href="/UserAdmin" data-toggle="collapse"
+                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse"
                            data-target="#userSubmenu">
                             <i class="fa-solid fa-user"></i>
                             <p class="mb-0 ms-2 p-2">Người Dùng</p>
@@ -73,10 +73,10 @@
                         </a>
                         <ul class="collapse pl-4" id="chuyenXeSubmenu">
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Danh Sách Chuyến Xe</a>
+                                <a class="nav-link" href="/ChuyenXe">Danh Sách Chuyến Xe</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Thêm Chuyến Xe</a>
+                                <a class="nav-link" href="/ThemChuyenXe">Thêm Chuyến Xe</a>
                             </li>
                         </ul>
                     </li>
@@ -97,13 +97,13 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href="#">
+                        <a class="nav-link d-flex align-items-center" href="/HoaDon">
                             <i class="fa-solid fa-receipt"></i>
                             <p class="mb-0 ms-2 p-2">Quản Lý Hóa Đơn</p>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href="#">
+                        <a class="nav-link d-flex align-items-center" href="/ThongKe">
                             <i class="fa-solid fa-chart-line"></i>
                             <p class="mb-0 ms-2 p-2">Thống Kê</p>
                         </a>
@@ -158,3 +158,8 @@
         </main>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

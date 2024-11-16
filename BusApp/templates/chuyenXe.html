@@ -3,20 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản lý xe</title>
+    <title>Quản lý chuyến xe</title>
     <!-- Link Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebarAdmin.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-
 </head>
 <body>
 
 <div class="container-fluid">
     <div class="row">
-        <button class="navbar-toggler d-md-none" type="button" data-toggle="collapse" data-target="#sidebarMenu" >
-              <img src="{{ url_for('static', filename='data/hamburger_menu_icon.jpeg') }}" alt="Logo" width="50">
+        <button class="navbar-toggler d-md-none" type="button" data-toggle="collapse" data-target="#sidebarMenu">
+            <img src="{{ url_for('static', filename='data/hamburger_menu_icon.jpeg') }}" alt="Logo" width="50">
         </button>
         <!-- Sidebar -->
         <nav class="col-md-2 bg-light sidebar collapse d-md-block" id="sidebarMenu">
@@ -32,7 +30,8 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link collapsed d-flex align-items-center" href="/UserAdmin" data-toggle="collapse" data-target="#userSubmenu">
+                        <a class="nav-link collapsed d-flex align-items-center" href="/UserAdmin" data-toggle="collapse"
+                           data-target="#userSubmenu">
                             <i class="fa-solid fa-user"></i>
                             <p class="mb-0 ms-2 p-2">Người Dùng</p>
                             <i class="fa-solid fa-caret-down"></i>
@@ -48,7 +47,8 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse" data-target="#tuyenXeSubmenu">
+                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse"
+                           data-target="#tuyenXeSubmenu">
                             <i class="fa-solid fa-map-pin"></i>
                             <p class="mb-0 ms-2 p-2">Quản Lý Tuyến Xe</p>
                             <i class="fa-solid fa-caret-down"></i>
@@ -63,7 +63,8 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse" data-target="#chuyenXeSubmenu">
+                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse"
+                           data-target="#chuyenXeSubmenu">
                             <i class="fa-solid fa-map"></i>
                             <p class="mb-0 ms-2 p-2">Quản Lý Chuyến Xe</p>
                             <i class="fa-solid fa-caret-down"></i>
@@ -78,7 +79,8 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse" data-target="#xeSubmenu">
+                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse"
+                           data-target="#xeSubmenu">
                             <i class="fa-solid fa-bus"></i>
                             <p class="mb-0 ms-2 p-2">Quản Lý Xe</p>
                             <i class="fa-solid fa-caret-down"></i>
@@ -112,7 +114,7 @@
         <main class="col-md-10 ml-sm-auto px-4">
             <!-- Header -->
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h2>Xe / Danh Sách Xe</h2>
+                <h2>Chuyên Xe / Danh Sách Chuyến Xe</h2>
                 <div class="text-right">
                     <span>Xin chào, Admin</span>
                     <img src="{{ url_for('static', filename='data/avatar.png') }}" alt="Avatar" class="rounded-circle"
@@ -121,38 +123,65 @@
             </div>
             <!-- Search and Add Button -->
             <div class="d-flex justify-content-between mb-3">
-                <form class="d-flex" method="get" action="/Xe">
-                    <input type="text" name="kw" class="form-control me-2" placeholder="Search..." value="{{ request.args.get('kw', '') }}">
-                    <button type="submit" class="btn btn-primary">Tìm</button>
-                </form>
-                <a href="/ThemXe" class="btn btn-primary"><i class="fa fa-plus"></i> Thêm Xe</a>
+                <div class="form-inline">
+                    <select class="form-control mr-3" id="diemDi" name="diemDi">
+                        <option value="">Chọn tỉnh thành</option>
+                        {% for tinh in tinhs %}
+                            <option value="{{ tinh.name }}">{{ tinh.name }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <select class="form-control mr-3" id="diemDen" name="diemDen">
+                        <option value="">Chọn tỉnh thành</option>
+                        {% for tinh in tinhs %}
+                            <option value="{{ tinh.name }}">{{ tinh.name }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <button class="btn btn-danger" id="timChuyenXe" type="submit">Tìm Chuyến Xe</button>
+                </div>
+                <a href="/ThemChuyenXe" class="btn btn-primary"><i class="fa fa-plus"></i> Thêm Chuyến Xe</a>
             </div>
 
             <!-- Employee Table -->
             <table class="table table-bordered">
                 <thead class="thead-light">
-                    <tr>
-                        <th>ID</th>
-                        <th>Biển số</th>
-                        <th>Sức chứa</th>
-                        <th>Tình trạng xe</th>
-                        <th>Hành Động</th>
-                    </tr>
+                <tr>
+                    <th>ID</th>
+                    <th>Tên Chuyến Xe</th>
+                    <th>Thời Gian Đi</th>
+                    <th>Thời Gian Đến</th>
+                    <th>Xe</th>
+                    <th>Chi tiết xe</th>
+                    <th>Hành Động</th>
+                </tr>
                 </thead>
 
                 <tbody id="customer-table-body">
-                {% for c in Xe %}
+                {% if chuyenXe.items %}
+                    {% for c in chuyenXe.items %}
+                        <tr>
+                            <td>{{ c.idLichTrinh }}</td>
+                            <td>{{ c.diem_di_tinh_name }} - {{ c.diem_den_tinh_name }}</td>
+                            <td>{{ c.thoiGianDi }}</td>
+                            <td>{{ c.thoiGianDen }}</td>
+                            <td>{{ c.bienSo }}</td>
+                            <td><a href="{{ url_for('chi_tiet_chuyen_xe', chuyen_xe_id=c.idLichTrinh) }}">Chi tiết xe</a></td>
+                            <td>
+                                <button class="btn btn-danger delete-btn" data-id="{{ c.idLichTrinh }}">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                                <a href="{{ url_for('edit_trip', id=c.idLichTrinh) }}" class="btn btn-primary">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
                     <tr>
-                        <td>{{ c.idXe }}</td>
-                        <td>{{ c.bienSo }}</td>
-                        <td>{{ c.sucChua }}</td>
-                        <td>{{ c.tinhTrangXe }}</td>
-                        <td>
-                            <button class="btn btn-danger delete-btn" data-id="{{ c.idXe }}"><i class="fa fa-trash"></i></button>
-                            <a href="{{ url_for('edit_vehicle', id=c.idXe) }}" class="btn btn-primary"><i class="fa fa-edit"></i></a>
-                        </td>
+                        <td colspan="7" class="text-center">Không tìm thấy chuyến xe phù hợp!</td>
                     </tr>
-                {% endfor %}
+                {% endif %}
                 </tbody>
             </table>
 
@@ -166,14 +195,16 @@
             <nav>
                 <ul class="pagination justify-content-center">
                     <li class="page-item">
-                        {% if Xe.has_prev %}
-                            <a class="page-link" href="{{ url_for('xe_admin', page=Xe.prev_num) }}">Previous</a>
+                        {% if chuyenXe.has_prev %}
+                            <a class="page-link"
+                               href="{{ url_for('chuyenXe_admin', page=chuyenXe.prev_num) }}">Previous</a>
                         {% endif %}
                     </li>
-                    <li class="page-item active"><span class="page-link">Trang {{ Xe.page }} trên {{ Xe.pages }}</span></li>
+                    <li class="page-item active"><span
+                            class="page-link">Trang {{ chuyenXe.page }} trên {{ chuyenXe.pages }}</span></li>
                     <li class="page-item">
-                        {% if Xe.has_next %}
-                            <a class="page-link" href="{{ url_for('xe_admin', page=Xe.next_num) }}">Next</a>
+                        {% if chuyenXe.has_next %}
+                            <a class="page-link" href="{{ url_for('chuyenXe_admin', page=chuyenXe.next_num) }}">Next</a>
                         {% endif %}
                     </li>
                 </ul>
@@ -188,30 +219,44 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    const deleteButtons = document.querySelectorAll(".delete-btn");
+    document.addEventListener("DOMContentLoaded", function () {
+        const deleteButtons = document.querySelectorAll(".delete-btn");
 
-    deleteButtons.forEach(button => {
-        button.addEventListener("click", function() {
-            const vehicleId = this.getAttribute("data-id");
+        deleteButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                const idChuyenXe = this.getAttribute("data-id");
 
-            if (confirm("Bạn có chắc chắn muốn xóa xe này?")) {
-                fetch(`/xoa_Xe/${vehicleId}`, {
-                    method: 'DELETE'
-                })
-                .then(response => {
-                    if (response.ok) {
-                        this.closest('tr').remove(); // Xóa hàng khỏi bảng nếu thành công
-                        alert("Đã xóa thành công!");
-                    } else {
-                        alert("Xóa không thành công. Vui lòng thử lại.");
-                    }
-                })
-                .catch(error => console.error("Error:", error));
-            }
+                if (confirm("Bạn có chắc chắn muốn xóa xe này?")) {
+                    fetch(`/xoa_ChuyenXe/${idChuyenXe}`, {
+                        method: 'DELETE'
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                this.closest('tr').remove(); // Xóa hàng khỏi bảng nếu thành công
+                                alert("Đã xóa thành công!");
+                            } else {
+                                alert("Xóa không thành công. Vui lòng thử lại.");
+                            }
+                        })
+                        .catch(error => console.error("Error:", error));
+                }
+            });
         });
     });
-});
+    document.getElementById('timChuyenXe').addEventListener('click', function (event) {
+        const diemDi = document.getElementById('diemDi').value;
+        const diemDen = document.getElementById('diemDen').value;
+
+        if (!diemDi || !diemDen) {
+            alert('Vui lòng chọn cả điểm Đi và điểm Đến!');
+            event.preventDefault(); // Ngăn gửi yêu cầu nếu dữ liệu không hợp lệ
+            return false;
+        }
+
+        // Chuyển hướng hoặc gửi yêu cầu với điểm Đi và điểm Đến
+        const url = `/ChuyenXe?diemDi=${encodeURIComponent(diemDi)}&diemDen=${encodeURIComponent(diemDen)}`;
+        window.location.href = url; // Chuyển hướng sang URL mới với tham số
+    });
 </script>
 
 

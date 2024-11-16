@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Bus - Trang cá nhân</title>
+    <title>Trang chủ - Dashboard</title>
     <!-- Link Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebarAdmin.css') }}">
@@ -14,7 +14,7 @@
 <div class="container-fluid">
     <div class="row">
         <button class="navbar-toggler d-md-none" type="button" data-toggle="collapse" data-target="#sidebarMenu">
-              <img src="{{ url_for('static', filename='data/hamburger_menu_icon.jpeg') }}" alt="Logo" width="50">
+            <img src="{{ url_for('static', filename='data/hamburger_menu_icon.jpeg') }}" alt="Logo" width="50">
         </button>
         <!-- Sidebar -->
         <nav class="col-md-2 bg-light sidebar collapse d-md-block" id="sidebarMenu">
@@ -24,13 +24,14 @@
                 </div>
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href="/">
+                        <a class="nav-link d-flex align-items-center" href="/HomeAdmin">
                             <i class="fa-solid fa-house"></i>
                             <p class="mb-0 ms-2 p-2">Trang Chủ</p>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse" data-target="#userSubmenu">
+                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse"
+                           data-target="#userSubmenu">
                             <i class="fa-solid fa-user"></i>
                             <p class="mb-0 ms-2 p-2">Người Dùng</p>
                             <i class="fa-solid fa-caret-down"></i>
@@ -46,7 +47,8 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse" data-target="#tuyenXeSubmenu">
+                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse"
+                           data-target="#tuyenXeSubmenu">
                             <i class="fa-solid fa-map-pin"></i>
                             <p class="mb-0 ms-2 p-2">Quản Lý Tuyến Xe</p>
                             <i class="fa-solid fa-caret-down"></i>
@@ -56,27 +58,29 @@
                                 <a class="nav-link" href="/TuyenXe">Danh Sách Tuyến Xe</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Thêm Tuyến Xe</a>
+                                <a class="nav-link" href="/ThemTuyenXe">Thêm Tuyến Xe</a>
                             </li>
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse" data-target="#chuyenXeSubmenu">
+                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse"
+                           data-target="#chuyenXeSubmenu">
                             <i class="fa-solid fa-map"></i>
                             <p class="mb-0 ms-2 p-2">Quản Lý Chuyến Xe</p>
                             <i class="fa-solid fa-caret-down"></i>
                         </a>
                         <ul class="collapse pl-4" id="chuyenXeSubmenu">
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Danh Sách Chuyến Xe</a>
+                                <a class="nav-link" href="/ChuyenXe">Danh Sách Chuyến Xe</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Thêm Chuyến Xe</a>
+                                <a class="nav-link" href="/ThemChuyenXe">Thêm Chuyến Xe</a>
                             </li>
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse" data-target="#xeSubmenu">
+                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse"
+                           data-target="#xeSubmenu">
                             <i class="fa-solid fa-bus"></i>
                             <p class="mb-0 ms-2 p-2">Quản Lý Xe</p>
                             <i class="fa-solid fa-caret-down"></i>
@@ -91,13 +95,13 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href="#">
+                        <a class="nav-link d-flex align-items-center" href="/HoaDon">
                             <i class="fa-solid fa-receipt"></i>
                             <p class="mb-0 ms-2 p-2">Quản Lý Hóa Đơn</p>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href="#">
+                        <a class="nav-link d-flex align-items-center" href="/ThongKe">
                             <i class="fa-solid fa-chart-line"></i>
                             <p class="mb-0 ms-2 p-2">Thống Kê</p>
                         </a>
@@ -110,7 +114,7 @@
         <main class="col-md-10 ml-sm-auto px-4">
             <!-- Header -->
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h2>Trang cá nhân</h2>
+                <h2>Dashboard</h2>
                 <div class="text-right">
                     <span>Xin chào, Admin</span>
                     <img src="{{ url_for('static', filename='data/avatar.png') }}" alt="Avatar" class="rounded-circle"
@@ -118,51 +122,150 @@
                 </div>
             </div>
 
-            <!-- Profile Form -->
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Cập nhật thông tin cá nhân</h5>
-                    <form>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="name">Tên</label>
-                                <input type="text" class="form-control" id="name" value="Admin">
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="email">Email</label>
-                                <input type="email" class="form-control" id="email" value="admin@gmail.com">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="phone">Số điện thoại</label>
-                                <input type="text" class="form-control" id="phone" value="0123456789">
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="dob">Ngày sinh</label>
-                                <input type="date" class="form-control" id="dob" value="2000-01-01">
+            <div class="container-fluid mt-5">
+                <!-- Hàng 1 -->
+                <div class="row mb-4">
+                    <!-- Tổng số khách hàng -->
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="card shadow-lg h-100">
+                            <div class="d-flex align-items-center justify-content-between p-4 h-100">
+                                <!-- Nội dung bên trái -->
+                                <div class="text-start">
+                                    <h2 class="display-5 counter mb-0" data-target="{{ total_customers }}">0</h2>
+                                    <p class="fw-bold mb-0">Khách hàng</p>
+                                </div>
+                                <!-- Icon bên phải -->
+                                <div>
+                                    <i class="fa-solid fa-user-plus fa-2x"></i>
+                                </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="address">Địa chỉ</label>
-                            <input type="text" class="form-control" id="address" value="Ninh Kiều, Cần Thơ">
-                        </div>
-                        <div class="form-group">
-                            <label>Giới tính</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="gender" id="male" value="male">
-                                <label class="form-check-label" for="male">Nam</label>
+                    </div>
+
+                    <!-- Tổng số chuyến xe -->
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="card shadow-lg h-100">
+                            <div class="d-flex align-items-center justify-content-between p-4 h-100">
+                                <!-- Nội dung bên trái -->
+                                <div class="text-start">
+                                    <h2 class="display-5 counter mb-0" data-target="{{ total_trips }}">0</h2>
+                                    <p class="fw-bold mb-0">Chuyến xe</p>
+                                </div>
+                                <!-- Icon bên phải -->
+                                <div>
+                                    <i class="fa-solid fa-map fa-2x"></i>
+                                </div>
                             </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="gender" id="female" value="female"
-                                       checked>
-                                <label class="form-check-label" for="female">Nữ</label>
+                        </div>
+                    </div>
+
+                    <!-- Tổng doanh thu -->
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="card shadow-lg h-100">
+                            <div class="d-flex align-items-center justify-content-between p-4 h-100">
+                                <!-- Nội dung bên trái -->
+                                <div class="text-start">
+                                    <h2 class="display-5 counter mb-0" data-target="{{ total_revenue }}">0</h2>
+                                    <p class="fw-bold mb-0">Doanh thu</p>
+                                </div>
+                                <!-- Icon bên phải -->
+                                <div>
+                                    <i class="fa-solid fa-money-bill fa-2x"></i>
+                                </div>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary">Cập nhật</button>
-                    </form>
+                    </div>
+
+                    <!-- Tổng số tuyến xe -->
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="card shadow-lg h-100">
+                            <div class="d-flex align-items-center justify-content-between p-4 h-100">
+                                <!-- Nội dung bên trái -->
+                                <div class="text-start">
+                                    <h2 class="display-5 counter mb-0" data-target="{{ total_routes }}">0</h2>
+                                    <p class="fw-bold mb-0">Tuyến xe</p>
+                                </div>
+                                <!-- Icon bên phải -->
+                                <div>
+                                    <i class="fa-solid fa-map-pin fa-2x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hàng 2 -->
+                <div class="row">
+                    <!-- Ô thứ 5 -->
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="card shadow-lg h-100">
+                            <div class="d-flex align-items-center justify-content-between p-4 h-100">
+                                <!-- Nội dung bên trái -->
+                                <div class="text-start">
+                                    <h2 class="display-5 counter mb-0" data-target="{{ total_employees }}">0</h2>
+                                    <p class="fw-bold mb-0">Nhân viên</p>
+                                </div>
+                                <!-- Icon bên phải -->
+                                <div>
+                                    <i class="fa-solid fa-address-card fa-2x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ô thứ 6 -->
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="card shadow-lg h-100">
+                            <div class="d-flex align-items-center justify-content-between p-4 h-100">
+                                <!-- Nội dung bên trái -->
+                                <div class="text-start">
+                                    <h2 class="display-5 counter mb-0" data-target="{{ total_vehicles }}">0</h2>
+                                    <p class="fw-bold mb-0">Xe</p>
+                                </div>
+                                <!-- Icon bên phải -->
+                                <div>
+                                    <i class="fa-solid fa-bus fa-2x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ô thứ 7 -->
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="card shadow-lg h-100">
+                            <div class="d-flex align-items-center justify-content-between p-4 h-100">
+                                <!-- Nội dung bên trái -->
+                                <div class="text-start">
+                                    <h2 class="display-5 counter mb-0" data-target="{{ total_provinces }}">0</h2>
+                                    <p class="fw-bold mb-0">Tỉnh, thành phố</p>
+                                </div>
+                                <!-- Icon bên phải -->
+                                <div>
+                                    <i class="fa-solid fa-city fa-2x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ô thứ 8 -->
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="card shadow-lg h-100">
+                            <div class="d-flex align-items-center justify-content-between p-4 h-100">
+                                <!-- Nội dung bên trái -->
+                                <div class="text-start">
+                                    <h2 class="display-5 counter mb-0" data-target="{{ total_stations }}">0</h2>
+                                    <p class="fw-bold mb-0">Bến xe</p>
+                                </div>
+                                <!-- Icon bên phải -->
+                                <div>
+                                    <i class="fa-solid fa-charging-station fa-2x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+
         </main>
     </div>
 </div>
@@ -171,6 +274,31 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const counters = document.querySelectorAll('.counter');
 
+        counters.forEach(counter => {
+            const target = +counter.getAttribute('data-target'); // Giá trị mục tiêu
+            let current = 0; // Giá trị ban đầu
+            const duration = 1000; // Thời gian hoàn thành (1 giây)
+            const increment = target / (duration / 10); // Bước tăng
+
+            const updateCount = () => {
+                current += increment;
+                if (current < target) {
+                    counter.innerText = Math.ceil(current);
+                    setTimeout(updateCount, 10); // Cập nhật mỗi 10ms
+                } else {
+                    counter.innerText = target; // Đảm bảo hiển thị đúng giá trị mục tiêu
+                }
+            };
+
+            updateCount();
+        });
+    });
+
+
+</script>
 </body>
 </html>

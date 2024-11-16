@@ -45,6 +45,15 @@ class TuyenXe(db.Model):
     diem_di_ben_xe = db.relationship('Ben_Xe', foreign_keys=[diemDi])
     diem_den_ben_xe = db.relationship('Ben_Xe', foreign_keys=[diemDen])
 
+class ChuyenXe(db.Model):
+    __tablename__ = 'LichTrinh'
+    idLichTrinh = Column(Integer, primary_key=True, autoincrement=True)
+    idTuyenDuong = Column(Integer, ForeignKey('TuyenXe.idTuyenDuong'), nullable=False)
+    thoiGianDi = Column(String(50), nullable=False)
+    thoiGianDen = Column(String(50), nullable=False)
+    idXe = Column(Integer, ForeignKey('Xe.idXe'), nullable=False)
+    # Mối quan hệ với bảng TuyenXe và Xe
+
 class Ben_Xe(db.Model):
     __tablename__ = 'Ben_Xe'
     ben_xe_id = Column(Integer, primary_key=True, autoincrement=True)
@@ -59,10 +68,41 @@ class Xe(db.Model):
     sucChua = Column(Integer, nullable=False)
     tinhTrangXe = Column(String(20), nullable=False)
 
+class Ghe(db.Model):
+    __tablename__ = 'gheNgoi'
+    maGhe=Column(Integer, primary_key=True, autoincrement=True)
+    soGhe = Column(String(20), nullable=False)
+    idXe = Column(Integer, ForeignKey('Xe.idXe'), nullable=False)
+    tinhTrang = Column(String(30), nullable=False)
+
+    xe = db.relationship('Xe', backref='danh_sach_ghe')
+
 class Tinh(db.Model):
     __tablename__ = 'provinces'
     code = db.Column(db.String, primary_key=True)
     name = db.Column(db.String)
+
+class HoaDon(db.Model):
+    __tablename__ = 'HoaDon'
+    idHoaDon = Column(Integer, primary_key=True, autoincrement=True)
+    idDonHang = Column(Integer, ForeignKey('DonHang.idDonHang'), nullable=False)
+    ngayLap = Column(String(20), nullable=False)
+    tongTien = Column(REAL, nullable=False)
+    trangThai = Column(Integer, ForeignKey('TrangThaiHoaDon.idTrangThai'), nullable=False)
+
+class TrangThaiHoaDon(db.Model):
+    __tablename__ = 'TrangThaiHoaDon'
+    idTrangThai = Column(Integer, primary_key=True, autoincrement=True)
+    tenTrangThai = Column(String(20), nullable=False)
+
+class DonHang(db.Model):
+    __tablename__ = 'DonHang'
+    idDonHang = Column(Integer, primary_key=True, autoincrement=True)
+    idKhachHang = Column(Integer, ForeignKey('KhachHang.idKhachHang'), nullable=False)
+    idXe = Column(Integer, ForeignKey('Xe.idXe'), nullable=False)
+    ngayDat = Column(String(20), nullable=False)
+    idLichTrinh = Column(Integer, ForeignKey('ChuyenXe.idLichTrinh'), nullable=False)
+    soGhe = Column(Integer, nullable=False)
 
 if __name__ == '__main__':
     with app.app_context():

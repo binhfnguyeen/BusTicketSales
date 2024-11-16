@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Bus - Trang cá nhân</title>
+    <title>Quản lý tuyến xe</title>
     <!-- Link Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebarAdmin.css') }}">
@@ -73,10 +73,10 @@
                         </a>
                         <ul class="collapse pl-4" id="chuyenXeSubmenu">
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Danh Sách Chuyến Xe</a>
+                                <a class="nav-link" href="/ChuyenXe">Danh Sách Chuyến Xe</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Thêm Chuyến Xe</a>
+                                <a class="nav-link" href="/ThemChuyenXe">Thêm Chuyến Xe</a>
                             </li>
                         </ul>
                     </li>
@@ -97,13 +97,13 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href="#">
+                        <a class="nav-link d-flex align-items-center" href="/HoaDon">
                             <i class="fa-solid fa-receipt"></i>
                             <p class="mb-0 ms-2 p-2">Quản Lý Hóa Đơn</p>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href="#">
+                        <a class="nav-link d-flex align-items-center" href="/ThongKe">
                             <i class="fa-solid fa-chart-line"></i>
                             <p class="mb-0 ms-2 p-2">Thống Kê</p>
                         </a>
@@ -125,7 +125,23 @@
             </div>
             <!-- Search and Add Button -->
             <div class="d-flex justify-content-between mb-3">
-                <input type="text" class="form-control w-25" placeholder="Search...">
+                <div class="form-inline">
+                    <select class="form-control mr-3" id="diemDi" name="diemDi">
+                        <option value="">Chọn tỉnh thành</option>
+                        {% for tinh in tinhs %}
+                            <option value="{{ tinh.name }}">{{ tinh.name }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <select class="form-control mr-3" id="diemDen" name="diemDen">
+                        <option value="">Chọn tỉnh thành</option>
+                        {% for tinh in tinhs %}
+                            <option value="{{ tinh.name }}">{{ tinh.name }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <button class="btn btn-danger" id="timTuyenXe" type="submit">Tìm Tuyến Xe</button>
+                </div>
                 <a href="/ThemTuyenXe" class="btn btn-primary"><i class="fa fa-plus"></i> Thêm Tuyến Xe</a>
             </div>
 
@@ -224,6 +240,20 @@
                 }
             });
         });
+    });
+    document.getElementById('timTuyenXe').addEventListener('click', function (event) {
+        const diemDi = document.getElementById('diemDi').value;
+        const diemDen = document.getElementById('diemDen').value;
+
+        if (!diemDi || !diemDen) {
+            alert('Vui lòng chọn cả điểm Đi và điểm Đến!');
+            event.preventDefault(); // Ngăn gửi yêu cầu nếu dữ liệu không hợp lệ
+            return false;
+        }
+
+        // Chuyển hướng hoặc gửi yêu cầu với điểm Đi và điểm Đến
+        const url = `/TuyenXe?diemDi=${encodeURIComponent(diemDi)}&diemDen=${encodeURIComponent(diemDen)}`;
+        window.location.href = url; // Chuyển hướng sang URL mới với tham số
     });
 </script>
 

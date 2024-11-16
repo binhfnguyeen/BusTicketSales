@@ -2,12 +2,16 @@ from flask import Flask, render_template, request
 import os
 import json
 import hashlib
+
+from sqlalchemy import desc, or_
+
 from BusApp import main
-from BusApp.models import KhachHang, NhanVien, TuyenXe, Xe, Ben_Xe, Tinh
+from BusApp.models import KhachHang, NhanVien, TuyenXe, Xe, Ben_Xe, Tinh, ChuyenXe, Ghe, HoaDon, TrangThaiHoaDon, DonHang
 import BusApp
 import sqlite3
 from BusApp import db
 from sqlalchemy.orm import aliased
+
 
 def read_user():
     try:
@@ -63,16 +67,126 @@ def load_employees(kw=None):
 def total_employees():
     return NhanVien.query.count()
 
-def load_tuyenXe():
-    page = request.args.get('page', 1, type=int)
-    return TuyenXe.query.paginate(page=page, per_page=6)
+def tuyenXe_load():
+    # Khai báo alias cho bảng Ben_Xe và Tinh
+    ben_xe_diem_di = aliased(Ben_Xe)
+    ben_xe_diem_den = aliased(Ben_Xe)
+    tinh_diem_di = aliased(Tinh)  # Alias cho bảng Tinh (điểm đi)
+    tinh_diem_den = aliased(Tinh)  # Alias cho bảng Tinh (điểm đến)
+
+    # Lấy tham số từ query string
+    diemDi = request.args.get('diemDi')  # Lấy tỉnh điểm đi
+    diemDen = request.args.get('diemDen')  # Lấy tỉnh điểm đến
+    page = request.args.get('page', 1, type=int)  # Số trang
+
+    # Truy vấn cơ bản
+    query = db.session.query(
+        TuyenXe,
+        ben_xe_diem_di.ten_ben_xe.label('diem_di_name'),
+        ben_xe_diem_den.ten_ben_xe.label('diem_den_name'),
+        tinh_diem_di.name.label('diem_di_tinh_name'),
+        tinh_diem_den.name.label('diem_den_tinh_name'),
+        ben_xe_diem_di.tinh_code.label('diem_di_tinh_code'),
+        ben_xe_diem_den.tinh_code.label('diem_den_tinh_code')
+    ) \
+        .join(ben_xe_diem_di, TuyenXe.diemDi == ben_xe_diem_di.ben_xe_id) \
+        .join(ben_xe_diem_den, TuyenXe.diemDen == ben_xe_diem_den.ben_xe_id) \
+        .join(tinh_diem_di, ben_xe_diem_di.tinh_code == tinh_diem_di.code) \
+        .join(tinh_diem_den, ben_xe_diem_den.tinh_code == tinh_diem_den.code)
+
+    # Lọc theo điểm Đi và điểm Đến nếu có
+    if diemDi:
+        query = query.filter(tinh_diem_di.name == diemDi)
+    if diemDen:
+        query = query.filter(tinh_diem_den.name == diemDen)
+
+    # Phân trang kết quả
+    tuyen_xe = query.paginate(page=page, per_page=6)
+
+    return tuyen_xe
+
 
 def total_tuyenXe():
     return TuyenXe.query.count()
 
-def load_Xe():
+def load_IDTuyenXe():
+    return db.session.query(TuyenXe.idTuyenDuong).all()
+
+def load_tuyenXe():
+    return TuyenXe.query.all()
+
+def load_tinh():
+    return db.session.query(Tinh).all()
+
+def load_ChuyenXe():
+    # Aliases cho các bảng liên quan
+    ben_xe_diem_di = aliased(Ben_Xe)
+    ben_xe_diem_den = aliased(Ben_Xe)
+    tinh_diem_di = aliased(Tinh)
+    tinh_diem_den = aliased(Tinh)
+
+    # Lấy tham số từ query string
+    diemDi = request.args.get('diemDi')
+    diemDen = request.args.get('diemDen')
+
+    # Lấy số trang từ query string
     page = request.args.get('page', 1, type=int)
-    return Xe.query.paginate(page=page, per_page=6)
+
+    # Truy vấn dữ liệu
+    query = db.session.query(
+        ChuyenXe.idLichTrinh,
+        Xe.bienSo.label('bienSo'),
+        ChuyenXe.thoiGianDi,
+        ChuyenXe.thoiGianDen,
+        TuyenXe.idTuyenDuong,
+        tinh_diem_di.name.label('diem_di_tinh_name'),
+        tinh_diem_den.name.label('diem_den_tinh_name')
+    ) \
+        .join(Xe, ChuyenXe.idXe == Xe.idXe) \
+        .join(TuyenXe, ChuyenXe.idTuyenDuong == TuyenXe.idTuyenDuong) \
+        .join(ben_xe_diem_di, TuyenXe.diemDi == ben_xe_diem_di.ben_xe_id) \
+        .join(ben_xe_diem_den, TuyenXe.diemDen == ben_xe_diem_den.ben_xe_id) \
+        .join(tinh_diem_di, ben_xe_diem_di.tinh_code == tinh_diem_di.code) \
+        .join(tinh_diem_den, ben_xe_diem_den.tinh_code == tinh_diem_den.code)
+
+    # Lọc theo điểm Đi và điểm Đến nếu có
+    if diemDi:
+        query = query.filter(tinh_diem_di.name == diemDi)
+    if diemDen:
+        query = query.filter(tinh_diem_den.name == diemDen)
+
+    return query.paginate(page=page, per_page=6)
+
+
+def total_ChuyenXe():
+    return ChuyenXe.query.count()
+
+def chiTietChuyenXe(chuyen_xe_id):
+    chuyen_xe = db.session.query(
+        ChuyenXe,
+        TuyenXe,
+        Xe.bienSo,
+        Ben_Xe.ten_ben_xe.label('diem_di_name'),
+        Ben_Xe.ten_ben_xe.label('diem_den_name')
+    ) \
+        .join(TuyenXe, ChuyenXe.idTuyenDuong == TuyenXe.idTuyenDuong) \
+        .join(Xe, ChuyenXe.idXe == Xe.idXe) \
+        .join(Ben_Xe, TuyenXe.diemDi == Ben_Xe.ben_xe_id) \
+        .filter(ChuyenXe.idLichTrinh == chuyen_xe_id).first()
+    return chuyen_xe
+
+def load_Ghe(chuyen_xe):
+    return Ghe.query.filter_by(idXe=chuyen_xe.ChuyenXe.idXe).all()
+
+def load_Xe(kw=None):
+    page = request.args.get('page', 1, type=int)
+    query = Xe.query
+
+    # Nếu `kw` không trống, lọc theo từ khóa trong tên nhân viên
+    if kw:
+        query = query.filter(Xe.bienSo.contains(kw))
+
+    return query.paginate(page=page, per_page=6)
 
 def total_Xe():
     return Xe.query.count()
@@ -85,6 +199,14 @@ def load_taiXe():
     conn.close()
     return drivers
 
+def load_TenXe():
+    conn = sqlite3.connect('data/database.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT idXe, bienSo FROM Xe")
+    vehicles = cursor.fetchall()  # Lấy dữ liệu trước khi đóng kết nối
+    conn.close()
+    return vehicles
+
 def load_benXe():
     connection = sqlite3.connect('data/database.db')
     cursor = connection.cursor()
@@ -96,6 +218,27 @@ def load_benXe():
     connection.close()
     return stations
 
+def load_hoaDon(kw=None):
+    page = request.args.get('page', 1, type=int)
+    query = db.session.query(
+        HoaDon.idHoaDon,
+        KhachHang.email,
+        HoaDon.ngayLap,
+        HoaDon.tongTien,
+        TrangThaiHoaDon.tenTrangThai
+    ).join(DonHang, HoaDon.idDonHang == DonHang.idDonHang) \
+     .join(KhachHang, DonHang.idKhachHang == KhachHang.idKhachHang) \
+     .join(TrangThaiHoaDon, HoaDon.trangThai == TrangThaiHoaDon.idTrangThai)
+
+    # Nếu có từ khóa `kw`, áp dụng bộ lọc
+    if kw:
+        query = query.filter(or_(
+            KhachHang.email.contains(kw),
+            TrangThaiHoaDon.tenTrangThai.contains(kw)
+        ))
+
+    # Thực hiện phân trang
+    return query.paginate(page=page, per_page=6)
 
 def delete_customer_from_db(customer_id):
     connection = sqlite3.connect('D:/PycharmProject/BusTicketSales/BusApp/data/database.db')
@@ -125,35 +268,55 @@ def delete_route_from_db(route_id):
     connection.commit()
     connection.close()
 
+def delete_trip_from_db(trip_id):
+    connection = sqlite3.connect('D:/PycharmProject/BusTicketSales/BusApp/data/database.db')
+    cursor = connection.cursor()
+    cursor.execute("DELETE FROM LichTrinh WHERE idLichTrinh = ?", (trip_id,))
+    connection.commit()
+    connection.close()
+
+def delete_receipt_from_db(receipt_id):
+    connection = sqlite3.connect('D:/PycharmProject/BusTicketSales/BusApp/data/database.db')
+    cursor = connection.cursor()
+    cursor.execute("DELETE FROM HoaDon WHERE idHoaDon = ?", (receipt_id,))
+    connection.commit()
+    connection.close()
+
 def get_db_connection():
     conn = sqlite3.connect('./data/database.db')
     conn.row_factory = sqlite3.Row
     return conn
 
-def tuyenXe_load():
-    # Khai báo alias cho bảng Ben_Xe và Tinh
+def thongKeTuyenXe():
+    # Aliases cho các bảng
+    tinh_diem_di = aliased(Tinh)
+    tinh_diem_den = aliased(Tinh)
     ben_xe_diem_di = aliased(Ben_Xe)
     ben_xe_diem_den = aliased(Ben_Xe)
-    tinh_diem_di = aliased(Tinh)  # Alias cho bảng Tinh (điểm đi)
-    tinh_diem_den = aliased(Tinh)  # Alias cho bảng Tinh (điểm đến)
 
-    # Lấy số trang từ query string
-    page = request.args.get('page', 1, type=int)
+    # Truy vấn lấy thông tin cần thiết
+    query = (
+        db.session.query(
+            TuyenXe.soNgayTrongTuanChay,
+            tinh_diem_di.name.label('tinh_diem_di_name'),
+            tinh_diem_den.name.label('tinh_diem_den_name')
+        )
+        .join(ben_xe_diem_di, TuyenXe.diemDi == ben_xe_diem_di.ben_xe_id)
+        .join(ben_xe_diem_den, TuyenXe.diemDen == ben_xe_diem_den.ben_xe_id)
+        .join(tinh_diem_di, ben_xe_diem_di.tinh_code == tinh_diem_di.code)
+        .join(tinh_diem_den, ben_xe_diem_den.tinh_code == tinh_diem_den.code)
+        .order_by(TuyenXe.soNgayTrongTuanChay.desc())
+        .limit(5)
+        .all()
+    )
 
-    # Thực hiện truy vấn với join và phân trang
-    tuyen_xe = ((db.session.query(
-        TuyenXe,
-        ben_xe_diem_di.ten_ben_xe.label('diem_di_name'),
-        ben_xe_diem_den.ten_ben_xe.label('diem_den_name'),
-        tinh_diem_di.name.label('diem_di_tinh_name'),  # Lấy tên tỉnh điểm đi
-        tinh_diem_den.name.label('diem_den_tinh_name'),  # Lấy tên tỉnh điểm đến
-        ben_xe_diem_di.tinh_code.label('diem_di_tinh_code'),
-        ben_xe_diem_den.tinh_code.label('diem_den_tinh_code')
-    ) \
-    .join(ben_xe_diem_di, TuyenXe.diemDi == ben_xe_diem_di.ben_xe_id) \
-    .join(ben_xe_diem_den, TuyenXe.diemDen == ben_xe_diem_den.ben_xe_id) \
-    .join(tinh_diem_di, ben_xe_diem_di.tinh_code == tinh_diem_di.code)
-                .join(tinh_diem_den, ben_xe_diem_den.tinh_code == tinh_diem_den.code))
-                .paginate(page=page, per_page=6))
+    return query
 
-    return tuyen_xe
+def total_revenue():
+    return db.session.query(db.func.coalesce(db.func.sum(HoaDon.tongTien), 0)).scalar()
+
+def total_provinces():
+    return Tinh.query.count()
+
+def total_stations():
+    return Ben_Xe.query.count()
