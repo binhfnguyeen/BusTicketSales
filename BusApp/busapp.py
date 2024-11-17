@@ -69,7 +69,8 @@ def thongKe_admin():
 def hoaDon_admin():
     kw = request.args.get('kw')
     hd = dao.load_hoaDon(kw=kw)
-    return render_template("hoaDon.html", HoaDon=hd)
+    total = dao.total_hoaDon()
+    return render_template("hoaDon.html", HoaDon=hd, sum=total)
 
 @app.route('/xoa_HoaDon/<int:idHoaDon>', methods=['DELETE'])
 def delete_receipt(idHoaDon):
@@ -357,8 +358,8 @@ def user_admin_NV():
 def add_employee():
     if request.method == 'POST':
         # Xử lý dữ liệu từ form
-        hoNV = request.form['hoKhach']
-        tenNV = request.form['tenKhach']
+        hoNV = request.form['hoNV']
+        tenNV = request.form['tenNV']
         soDienThoai = request.form['soDienThoai']
         gioiTinh = request.form['gioiTinh']
         email = request.form['email']

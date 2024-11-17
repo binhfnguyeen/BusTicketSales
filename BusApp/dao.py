@@ -184,7 +184,7 @@ def load_Xe(kw=None):
 
     # Nếu `kw` không trống, lọc theo từ khóa trong tên nhân viên
     if kw:
-        query = query.filter(Xe.bienSo.contains(kw))
+        query = query.filter(Xe.bienSo.contains(kw) | Xe.tinhTrangXe.contains(kw))
 
     return query.paginate(page=page, per_page=6)
 
@@ -320,3 +320,6 @@ def total_provinces():
 
 def total_stations():
     return Ben_Xe.query.count()
+
+def total_hoaDon():
+    return HoaDon.query.count()
