@@ -1,5 +1,3 @@
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
 import io
 from flask import url_for, render_template, redirect, request, flash, make_response, session, jsonify
 from BusApp.main import login_blueprint
@@ -25,7 +23,7 @@ def thanh_toan():
 name = ''
 @app.route('/')
 def trang_chu():
-    with sqlite3.connect('data/database.db') as conn:
+    with sqlite3.connect('./data/database.db') as conn:
         c = conn.cursor()
         c.execute("SELECT * FROM provinces ")
         provinces = c.fetchall()
@@ -754,16 +752,6 @@ def invoice_history():
 @app.route('/generate_pdf')
 def generate_pdf():
     buffer = io.BytesIO()
-    pdf = canvas.Canvas(buffer, pagesize=letter)
-    pdf.drawString(100, 750, "Chi tiết hóa đơn")
-    pdf.drawString(100, 735, "Tên khách hàng: Thế Nguyên")
-    pdf.drawString(100, 720, "Email: phamthenguyen2004@gmail.com")
-    pdf.drawString(100, 705, "SDT: 0932109822")
-    pdf.drawString(100, 690, "Địa chỉ: Q. Tân Phú, TP.HCM")
-    # Add more content if needed
-    pdf.showPage()
-    pdf.save()
-
     buffer.seek(0)
     return make_response(buffer.getvalue(), 200, {
         'Content-Type': 'application/pdf',
