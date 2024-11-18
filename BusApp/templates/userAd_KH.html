@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Bus - Trang cá nhân</title>
+    <title>User - Khách hàng</title>
     <!-- Link Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebarAdmin.css') }}">
@@ -58,7 +58,7 @@
                                 <a class="nav-link" href="/TuyenXe">Danh Sách Tuyến Xe</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Thêm Tuyến Xe</a>
+                                <a class="nav-link" href="/ThemTuyenXe">Thêm Tuyến Xe</a>
                             </li>
                         </ul>
                     </li>
@@ -70,10 +70,10 @@
                         </a>
                         <ul class="collapse pl-4" id="chuyenXeSubmenu">
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Danh Sách Chuyến Xe</a>
+                                <a class="nav-link" href="/ChuyenXe">Danh Sách Chuyến Xe</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Thêm Chuyến Xe</a>
+                                <a class="nav-link" href="/ThemChuyenXe">Thêm Chuyến Xe</a>
                             </li>
                         </ul>
                     </li>
@@ -88,18 +88,18 @@
                                 <a class="nav-link" href="/Xe">Danh Sách Xe</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Thêm Xe</a>
+                                <a class="nav-link" href="/ThemXe">Thêm Xe</a>
                             </li>
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href="#">
+                        <a class="nav-link d-flex align-items-center" href="/HoaDon">
                             <i class="fa-solid fa-receipt"></i>
                             <p class="mb-0 ms-2 p-2">Quản Lý Hóa Đơn</p>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href="#">
+                        <a class="nav-link d-flex align-items-center" href="/ThongKe">
                             <i class="fa-solid fa-chart-line"></i>
                             <p class="mb-0 ms-2 p-2">Thống Kê</p>
                         </a>
@@ -158,8 +158,6 @@
                         <td>
                             <button class="btn btn-danger delete-btn" data-id="{{ c.idKhachHang }}"><i class="fa fa-trash"></i></button>
                             <a href="{{ url_for('edit_customer', id=c.idKhachHang) }}" class="btn btn-primary"><i class="fa fa-edit"></i></a>
-
-
                         </td>
                     </tr>
                 {% endfor %}

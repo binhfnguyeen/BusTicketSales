@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản lý xe</title>
+    <title>Quản lý hoá đơn</title>
     <!-- Link Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebarAdmin.css') }}">
@@ -112,7 +112,7 @@
         <main class="col-md-10 ml-sm-auto px-4">
             <!-- Header -->
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h2>Xe / Danh Sách Xe</h2>
+                <h2>Hoá Đơn</h2>
                 <div class="text-right">
                     <span>Xin chào, Admin</span>
                     <img src="{{ url_for('static', filename='data/avatar.png') }}" alt="Avatar" class="rounded-circle"
@@ -121,11 +121,10 @@
             </div>
             <!-- Search and Add Button -->
             <div class="d-flex justify-content-between mb-3">
-                <form class="d-flex" method="get" action="/Xe">
+                <form class="d-flex" method="get" action="/HoaDon">
                     <input type="text" name="kw" class="form-control me-2" placeholder="Search..." value="{{ request.args.get('kw', '') }}">
                     <button type="submit" class="btn btn-primary">Tìm</button>
                 </form>
-                <a href="/ThemXe" class="btn btn-primary"><i class="fa fa-plus"></i> Thêm Xe</a>
             </div>
 
             <!-- Employee Table -->
@@ -133,24 +132,23 @@
                 <thead class="thead-light">
                     <tr>
                         <th>ID</th>
-                        <th>Biển số</th>
-                        <th>Sức chứa</th>
-                        <th>Tình trạng xe</th>
-                        <th>Hành Động</th>
+                        <th>Email</th>
+                        <th>Ngày lập</th>
+                        <th>Tổng tiền</th>
+                        <th>Trạng thái</th>
+                        <th>Hành động</th>
                     </tr>
                 </thead>
 
                 <tbody id="customer-table-body">
-                {% for c in Xe %}
+                {% for c in HoaDon %}
                     <tr>
-                        <td>{{ c.idXe }}</td>
-                        <td>{{ c.bienSo }}</td>
-                        <td>{{ c.sucChua }}</td>
-                        <td>{{ c.tinhTrangXe }}</td>
-                        <td>
-                            <button class="btn btn-danger delete-btn" data-id="{{ c.idXe }}"><i class="fa fa-trash"></i></button>
-                            <a href="{{ url_for('edit_vehicle', id=c.idXe) }}" class="btn btn-primary"><i class="fa fa-edit"></i></a>
-                        </td>
+                        <td>{{ c[0] }}</td> <!-- idHoaDon -->
+                        <td>{{ c[1] }}</td> <!-- email -->
+                        <td>{{ c[2] }}</td> <!-- ngayLap -->
+                        <td>{{ c[3] }}</td> <!-- tongTien -->
+                        <td>{{ c[4] }}</td> <!-- tenTrangThai -->
+                        <td><button class="btn btn-danger delete-btn" data-id="{{ c[0] }}"><i class="fa fa-trash"></i></button></td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -158,7 +156,7 @@
 
             <!-- Total Employees -->
             <div class="mb-2">
-                <h5 id="total-customers">Tổng số tuyến xe: {{ sum }}</h5>
+                <h5 id="total-customers">Tổng số hoá đơn: {{ sum }}</h5>
             </div>
 
 
@@ -166,14 +164,14 @@
             <nav>
                 <ul class="pagination justify-content-center">
                     <li class="page-item">
-                        {% if Xe.has_prev %}
-                            <a class="page-link" href="{{ url_for('xe_admin', page=Xe.prev_num) }}">Previous</a>
+                        {% if HoaDon.has_prev %}
+                            <a class="page-link" href="{{ url_for('hoaDon_admin', page=HoaDon.prev_num) }}">Previous</a>
                         {% endif %}
                     </li>
-                    <li class="page-item active"><span class="page-link">Trang {{ Xe.page }} trên {{ Xe.pages }}</span></li>
+                    <li class="page-item active"><span class="page-link">Trang {{ HoaDon.page }} trên {{ HoaDon.pages }}</span></li>
                     <li class="page-item">
-                        {% if Xe.has_next %}
-                            <a class="page-link" href="{{ url_for('xe_admin', page=Xe.next_num) }}">Next</a>
+                        {% if HoaDon.has_next %}
+                            <a class="page-link" href="{{ url_for('hoaDon_admin', page=HoaDon.next_num) }}">Next</a>
                         {% endif %}
                     </li>
                 </ul>
@@ -193,10 +191,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
     deleteButtons.forEach(button => {
         button.addEventListener("click", function() {
-            const vehicleId = this.getAttribute("data-id");
+            const receiptId = this.getAttribute("data-id");
 
             if (confirm("Bạn có chắc chắn muốn xóa xe này?")) {
-                fetch(`/xoa_Xe/${vehicleId}`, {
+                fetch(`/xoa_HoaDon/${receiptId}`, {
                     method: 'DELETE'
                 })
                 .then(response => {
@@ -213,7 +211,6 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 </script>
-
 
 </body>
 </html>

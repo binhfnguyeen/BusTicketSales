@@ -21,6 +21,37 @@ def get_data_from_db(query, params):
         conn.close()
 
 
+@datve_blueprints.route('/save_order', methods=['POST'])
+def save_order():
+    try:
+        data = request.json
+        idKhachHang = data.get("idKhachHang")
+        idXe = data.get("idXe")
+        gia = data.get("gia")
+        trangThai = data.get("trangThai")
+        ngayDat = data.get("ngayDat")
+        idLichTrinh = data.get("idLichTrinh")
+        soGhe = data.get("soGhe")
+
+        conn = sqlite3.connect('./data/database.db')
+        cursor = conn.cursor()
+        idDonHang = cursor.lastrowid
+
+        query = """
+        INSERT INTO DonHang (idDonHang, idKhachHang, idXe, ngayDat, idLichTrinh, soGhe, gia, trangThai)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """
+        cursor.execute(query, (idDonHang, idKhachHang, idXe, ngayDat, idLichTrinh, soGhe, gia, trangThai))
+        conn.commit()
+
+
+        conn.close()
+
+        return jsonify({"success": True, "message": "Order saved successfully!"})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)})
+
+
 @datve_blueprints.route("/api/chuyenxe", methods=["GET"])
 def get_chuyenxe():
     diem_di = request.args.get('diem_di')

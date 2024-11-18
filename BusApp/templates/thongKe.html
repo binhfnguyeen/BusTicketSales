@@ -3,20 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản lý xe</title>
-    <!-- Link Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Thống Kê</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebarAdmin.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-
 <div class="container-fluid">
     <div class="row">
-        <button class="navbar-toggler d-md-none" type="button" data-toggle="collapse" data-target="#sidebarMenu" >
-              <img src="{{ url_for('static', filename='data/hamburger_menu_icon.jpeg') }}" alt="Logo" width="50">
+        <button class="navbar-toggler d-md-none" type="button" data-toggle="collapse" data-target="#sidebarMenu">
+            <img src="{{ url_for('static', filename='data/hamburger_menu_icon.jpeg') }}" alt="Logo" width="50">
         </button>
         <!-- Sidebar -->
         <nav class="col-md-2 bg-light sidebar collapse d-md-block" id="sidebarMenu">
@@ -32,7 +29,8 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link collapsed d-flex align-items-center" href="/UserAdmin" data-toggle="collapse" data-target="#userSubmenu">
+                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse"
+                           data-target="#userSubmenu">
                             <i class="fa-solid fa-user"></i>
                             <p class="mb-0 ms-2 p-2">Người Dùng</p>
                             <i class="fa-solid fa-caret-down"></i>
@@ -48,7 +46,8 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse" data-target="#tuyenXeSubmenu">
+                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse"
+                           data-target="#tuyenXeSubmenu">
                             <i class="fa-solid fa-map-pin"></i>
                             <p class="mb-0 ms-2 p-2">Quản Lý Tuyến Xe</p>
                             <i class="fa-solid fa-caret-down"></i>
@@ -63,7 +62,8 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse" data-target="#chuyenXeSubmenu">
+                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse"
+                           data-target="#chuyenXeSubmenu">
                             <i class="fa-solid fa-map"></i>
                             <p class="mb-0 ms-2 p-2">Quản Lý Chuyến Xe</p>
                             <i class="fa-solid fa-caret-down"></i>
@@ -78,7 +78,8 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse" data-target="#xeSubmenu">
+                        <a class="nav-link collapsed d-flex align-items-center" href="#" data-toggle="collapse"
+                           data-target="#xeSubmenu">
                             <i class="fa-solid fa-bus"></i>
                             <p class="mb-0 ms-2 p-2">Quản Lý Xe</p>
                             <i class="fa-solid fa-caret-down"></i>
@@ -112,108 +113,96 @@
         <main class="col-md-10 ml-sm-auto px-4">
             <!-- Header -->
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h2>Xe / Danh Sách Xe</h2>
+                <h2>Thống kê</h2>
                 <div class="text-right">
                     <span>Xin chào, Admin</span>
                     <img src="{{ url_for('static', filename='data/avatar.png') }}" alt="Avatar" class="rounded-circle"
                          width="30">
                 </div>
             </div>
-            <!-- Search and Add Button -->
-            <div class="d-flex justify-content-between mb-3">
-                <form class="d-flex" method="get" action="/Xe">
-                    <input type="text" name="kw" class="form-control me-2" placeholder="Search..." value="{{ request.args.get('kw', '') }}">
-                    <button type="submit" class="btn btn-primary">Tìm</button>
-                </form>
-                <a href="/ThemXe" class="btn btn-primary"><i class="fa fa-plus"></i> Thêm Xe</a>
+
+            <div class="container mt-5">
+                <div class="row">
+                    <!-- Biểu đồ Pie -->
+                    <div class="col-md-6">
+                        <h4>Trạng thái hóa đơn</h4>
+                        <canvas id="pieChart"></canvas>
+                    </div>
+                    <!-- Biểu đồ Bar -->
+                    <div class="col-md-6">
+                        <h4>Doanh thu theo tháng</h4>
+                        <canvas id="barChartRevenue"></canvas>
+                    </div>
+                </div>
             </div>
-
-            <!-- Employee Table -->
-            <table class="table table-bordered">
-                <thead class="thead-light">
-                    <tr>
-                        <th>ID</th>
-                        <th>Biển số</th>
-                        <th>Sức chứa</th>
-                        <th>Tình trạng xe</th>
-                        <th>Hành Động</th>
-                    </tr>
-                </thead>
-
-                <tbody id="customer-table-body">
-                {% for c in Xe %}
-                    <tr>
-                        <td>{{ c.idXe }}</td>
-                        <td>{{ c.bienSo }}</td>
-                        <td>{{ c.sucChua }}</td>
-                        <td>{{ c.tinhTrangXe }}</td>
-                        <td>
-                            <button class="btn btn-danger delete-btn" data-id="{{ c.idXe }}"><i class="fa fa-trash"></i></button>
-                            <a href="{{ url_for('edit_vehicle', id=c.idXe) }}" class="btn btn-primary"><i class="fa fa-edit"></i></a>
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-
-            <!-- Total Employees -->
-            <div class="mb-2">
-                <h5 id="total-customers">Tổng số tuyến xe: {{ sum }}</h5>
-            </div>
-
-
-            <!-- Pagination -->
-            <nav>
-                <ul class="pagination justify-content-center">
-                    <li class="page-item">
-                        {% if Xe.has_prev %}
-                            <a class="page-link" href="{{ url_for('xe_admin', page=Xe.prev_num) }}">Previous</a>
-                        {% endif %}
-                    </li>
-                    <li class="page-item active"><span class="page-link">Trang {{ Xe.page }} trên {{ Xe.pages }}</span></li>
-                    <li class="page-item">
-                        {% if Xe.has_next %}
-                            <a class="page-link" href="{{ url_for('xe_admin', page=Xe.next_num) }}">Next</a>
-                        {% endif %}
-                    </li>
-                </ul>
-            </nav>
 
         </main>
     </div>
 </div>
-
-<!-- Bootstrap JS and dependencies -->
+<!-- Chèn script vào cuối body -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    const deleteButtons = document.querySelectorAll(".delete-btn");
+        document.addEventListener('DOMContentLoaded', function () {
+            // Lấy dữ liệu từ Flask
+            const trangThaiData = {{ trang_thai_chart|tojson }};
+            const doanhThuData = {{ doanh_thu_chart|tojson }};
 
-    deleteButtons.forEach(button => {
-        button.addEventListener("click", function() {
-            const vehicleId = this.getAttribute("data-id");
+            // Biểu đồ tròn - Trạng thái hóa đơn
+            const pieCtx = document.getElementById('pieChart').getContext('2d');
+            new Chart(pieCtx, {
+                type: 'pie',
+                data: {
+                    labels: trangThaiData.labels,
+                    datasets: [{
+                        data: trangThaiData.data,
+                        backgroundColor: ['#007bff', '#ffc107', '#dc3545', '#28a745'],
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+                    },
+                },
+            });
 
-            if (confirm("Bạn có chắc chắn muốn xóa xe này?")) {
-                fetch(`/xoa_Xe/${vehicleId}`, {
-                    method: 'DELETE'
-                })
-                .then(response => {
-                    if (response.ok) {
-                        this.closest('tr').remove(); // Xóa hàng khỏi bảng nếu thành công
-                        alert("Đã xóa thành công!");
-                    } else {
-                        alert("Xóa không thành công. Vui lòng thử lại.");
-                    }
-                })
-                .catch(error => console.error("Error:", error));
-            }
+            // Biểu đồ cột 1 - Doanh thu theo tháng
+            const barCtxRevenue = document.getElementById('barChartRevenue').getContext('2d');
+            new Chart(barCtxRevenue, {
+                type: 'bar',
+                data: {
+                    labels: doanhThuData.labels,
+                    datasets: [{
+                        label: 'Doanh thu (VNĐ)',
+                        data: doanhThuData.data,
+                        backgroundColor: '#007bff',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false,
+                        },
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Doanh thu (VNĐ)',
+                            },
+                        },
+                    },
+                },
+            });
+
         });
-    });
-});
-</script>
-
+    </script>
 
 </body>
 </html>
